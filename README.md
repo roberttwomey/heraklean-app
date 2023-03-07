@@ -3,6 +3,26 @@ AI Co-Authoring tool for Radio Play
 
 ## Setup
 
+### Create environment
+
+```conda create --name heraklean```
+
+```conda install -c conda-forge nodejs```
+
+#### NPM setup
+
+```npm install audio-stream```
+
+```npm install audio-loader```
+
+## Usage
+
+```node stream-test.js```
+
+
+
+# ----- OLD STUFF -----
+
 ### Clone the repository
 
 ```git clone https://github.com/roberttwomey/radio-writing-tool```
