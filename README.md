@@ -78,6 +78,8 @@ pm2 stop writing-tool.js
 ```
 
 ## References
+- Web audio streaming with node.js https://www.npmjs.com/package/stream-player
+- 
 - Deploying p5 sketch with node: https://github.com/processing/p5.js/wiki/p5.js,-node.js,-socket.io
 
 - PM2 to deploy a sketch: https://pm2.keymetrics.io/
