@@ -1,189 +1,246 @@
-// WebSpeech rec for radio-play
-// radio-play.net
-// adapted from https://github.com/shiffman/A2Z-F18
+// NOTE: this app has migrated to: 
+// https://github.com/roberttwomey/heraklean-app
 
-// Speech Object
-//let speechRec;
+let title;
 
+let slider;
+let start, stop;
+let startTime,
+  started = false;
+let timer;
+let samples;
 
-let socket;
+let table;
 
-let gridState = 0;
+// advance through screens
+let screennum = 0;
+let next;
 
-let gridSizes = [
-  [ "1 / 3", "3 / 5", "5 / 7", "3 / 5"],
-  [ "1 / 5", "5 / 6", "6 / 7", "5 / 6"],
-  [ "1 / 2", "2 / 6", "6 / 7", "2 / 6"],
-  [ "1 / 2", "2 / 3", "3 / 7", "2 / 3"],
-  ];
+// screen 0
+let vid;
 
-let lastSelected = "";
+// screen 1
+let charsel, chartext, seltext;
+let characters = [
+  
+  'Ariana Omahan',
+  'Leo Lightning',
+  'Misael Maelstrom',
+  'Eurydice Diaz',
+  'Gaia Solange',
+  'Icarus O’brien',
+  'Hector Hailstorm',
+  'Jason Schwartz',
+  'Orion Tillman',
+  'Lily Padilla',
+  'Clio Jones',
+  'Atlas Rodriguez'
+];
+
+// screen 2
+let advslider, advtext;
+let socslider, soctext;
+
+// screen 3
+let audiotext, audiobtn;
+let bRecording = false;
+
+function preload() {
+  // vid = createImg("clouds2.gif", "video of clouds", "anonymous", );
+  vid = createImg("clouds2.gif");
+  vid.show();
+  vid.parent("wallpaper");
+}
 
 function setup() {
   noCanvas();
+
+  table = new p5.Table();
+  table.addColumn("time");
+  table.addColumn("value");
+
+  // screen 0
+  createSplashScreen();
   
-  // Start the socket connection
-  socket = io.connect('http://localhost:8080')
-
-  // Callback function
-  socket.on('completion', data => {
-    // console.log("received completion: "+data);
-    let completion = data["completion"]
-    console.log("received completion: "+completion);
-    let targetDiv = select("#completion");
-    targetDiv.html("<p contenteditable='true'>"+completion+"</p>", true);
-  })
-
-  document.addEventListener('selectionchange', () => updateSelection());
+  // screen 1
+  createCharSelector();  
   
-  // Create a Speech Recognition object with callback
-  speechRec = new p5.SpeechRec("en-US", gotSpeech);
-  // "Continuous recognition" (as opposed to one time only)
-  let continuous = true;
-  // If you want to try partial recognition (faster, less accurate)
-  let interimResults = true;
-  // This must come after setting the properties
-  speechRec.start(continuous, interimResults);
+  // next button
+  next = createButton("start");
+  next.parent("nextbtn");
+  // next.style("font-size", "24pt");
+  next.size(120, 40);
+  next.elt.style.marginTop='400px';
+  next.mousePressed(advanceInterface);
+  
+  // screen 2
+  createSliders()
 
-  // DOM element to display results
-  let output = select("#speech");
+  // screen 3
+  createAudioCheck();
+  
+  startTime = millis();
 
-  let lastHtml = "";
-  let count = 0;
+}
 
-  console.log("listening...");
-  // Speech recognized event
-  function gotSpeech() {
-    // Something is there
-    // Get it as a string, you can also get JSON with more info
-    console.log(speechRec);
+function mySelectEvent() {
+  let item = charsel.value();
+  background(200);
+  console.log('It is a ' + item + '!');
+}
 
-    if (speechRec.resultValue) {
-      let said = speechRec.resultString;
-      if (speechRec.resultJSON.results[count].isFinal) {
-        // final, add to html
-        let newHtml = lastHtml + "<p>" + said + "</p>";
-        output.html(newHtml);
-        lastHtml = newHtml;
-        count += 1;
-      } else {
-        // temp, add in light gray
-        let tempOutput = lastHtml + "<p style='color: gray'>" + said + '</p>';
-        output.html(tempOutput);
-      }
-    }
+function advanceInterface() {
+  screennum += 1;
+  if (screennum > 4) {
+    screennum = 0;
+    next.html('next');
+  }
+  console.log("+: "+screennum);
+  renderInterface();
+}
+
+function renderInterface() {
+  // next.position(windowWidth/2, windowHeight-100);
+  if (screennum == 0) {
+    vid.show(); // hides the html video loader
+  } else if (screennum == 1) {
+    vid.hide(); // hides the html video loader
+    next.html('next');
+    chartext.show();
+    charsel.show();
+  } else if (screennum == 2) {
+    chartext.hide();
+    charsel.hide();
+    
+    advtext.show();
+    advslider.show();
+    soctext.show();
+    socslider.show();
+  } else if (screennum == 3) {
+    advtext.hide();
+    advslider.hide();
+    soctext.hide();
+    socslider.hide();
+    
+    audiotext.show();
+    audiobtn.show();
+  } else if (screennum == 4) {
+    audiotext.hide();
+    audiobtn.hide();
+    
+    next.html('begin...');
   }
 }
 
-// do completion
 
-function doCompletion() {
-  // let promptDiv = select("#prompt");
-  let promptDiv = document.getElementById("prompt");
-  
-  // let completion = select("#completion");
-  // completion.html("<p>"+prompt.html()+"</p>", true);
-
-  // let prompt = promptDiv.html();
-
-  // convert paragraph elements <p> to lines with newlines
-  let paragraphs = Array.from(promptDiv.getElementsByTagName("p"));
-  // console.log(paragraphs);
-
-  let prompt = ""
-  for(let i = 0; i < paragraphs.length; i++) {
-    // console.log("paragraphs "+i+" "+paragraphs[i].innerText) // Will print the content of each paragraph
-    prompt+=paragraphs[i].innerText+"\n";
-  }
-
-  console.log("prompting: "+prompt);
-  const data = {
-    prompt: prompt
-  }
-  
-  // prompt the server with the data
-  socket.emit('prompt', data);
-
-  // promptGPT3(prompt.html().toString());
+function createSplashScreen() {
+  // vid.show();
 }
 
-function copyTo(thisClass) {
-  if(thisClass == "box1") {
-    target = "#script";
-  } else if (thisClass == "box2") {
-    target = "#prompt";
-  } else if (thisClass == "box3") {
-    target = "#speech";
+function createCharSelector() {
+    // character text
+  chartext = createP("select your character:");
+  chartext.parent("contents");
+  // chartext.style("font-size", "24pt");
+  chartext.style("top", "80px");
+  
+  // character selector
+  charsel = createSelect();
+  // charsel.position(50, 180);
+  charsel.option("")
+  for (thischar in characters) {
+    charsel.option(characters[thischar]);
   }
-    // } else if (thisClass == "box4") {
-  //   target = "#completion";
-  // }
+  charsel.selected("");
+  charsel.changed(mySelectEvent);
+  // charsel.style("font-size", "24pt");
+  charsel.style("top", "120px");
+  charsel.style("margin", "0 auto");
+  charsel.parent("contents");
   
-  console.log("copy \""+lastSelected+"\" to "+target);
-  let targetDiv = select(target);
-
-  // iterate over lines if we are dealing with a multi-line selection
-  const lines = lastSelected.split(/\r?\n/);
-  console.log(lines);
-  lines.forEach((thisline, i) => { 
-    if (thisline) targetDiv.html("<p>"+thisline+"</p>", true)
-  });
-
-  // targetDiv.html("<p>"+lastSelected+"</p>", true);
-  
-  lastSelected = "";
+  chartext.hide();
+  charsel.hide();
 }
 
-// adjusting size of panes
+function createAudioCheck() {
+  // audio text
+  audiotext = createP("test your microphone.<br>speak now:");
+  audiotext.parent("contents");
+  // audiotext.style("font-size", "24pt");
+  audiotext.style("top", "100px");
+  audiotext.hide();
+  
+  // record button
+  audiobtn = createButton("record");
+  audiobtn.parent("contents");
+  // audiobtn.style("font-size", "24pt");
+  audiobtn.size(120, 40);
+  audiobtn.style("top", "120px");
+  audiobtn.style("margin", "0 auto");
+  audiobtn.mousePressed(toggleRecording);
+  audiobtn.hide();
 
-function toggleState(thisClass) {
-  if (thisClass == "box1") {
-    if (gridState == 1) {
-      gridState = 0;
-    } else {
-      gridState = 1
-    }
-  } else if (thisClass == "box2") {
-    if (gridState == 2) {
-      gridState = 0;
-    } else {
-      gridState = 2;
-    }    
-  } else if (thisClass == "box3") {
-    if (gridState == 3) {
-      gridState = 0;
-    } else {
-      gridState = 3;
-    }    
-  }
-  updateGridState();
 }
 
-function updateGridState() {
+function createSliders() {
+  // title
+  advtext = createP("adventure");
+  advtext.parent("contents");
+  // advtext.style("font-size", "24pt");
+  advtext.style("top", "100px");
+  advtext.hide();
 
-  thisbox = document.getElementsByClassName("box1")[0];
-  thisbox.style.gridColumn = gridSizes[gridState][0];
+  // adventure slider
+  advslider = createSlider(-5, 5, 0);
+  advslider.style("width", "90%");
+  advslider.style("top", "140px");
+  advslider.style("margin", "0 auto");
+  advslider.parent("contents");
+  advslider.input(updateAdv);
+  advslider.hide();
   
-  thisbox = document.getElementsByClassName("box2")[0];
-  thisbox.style.gridColumn = gridSizes[gridState][1];
+  // sociability
+  soctext = createP("sociability");
+  soctext.style("font-size", "24pt");
+  soctext.parent("contents");
+  soctext.style("top", "100px");
+  soctext.hide();
   
-  thisbox = document.getElementsByClassName("box3")[0];
-  thisbox.style.gridColumn = gridSizes[gridState][2];
-
-  thisbox = document.getElementsByClassName("box4")[0];
-  thisbox.style.gridColumn = gridSizes[gridState][3];
-  
+  // sociability slider
+  socslider = createSlider(-5, 5, 0);
+  socslider.style("width", "90%");
+  socslider.style("top", "140px");
+  socslider.style("margin", "0 auto");
+  socslider.parent("contents");
+  socslider.input(updateSoc);
+  socslider.hide();
 }
 
+function updateSoc() {
+  let thisTime = millis() - startTime;
+  let thisValue = socslider.value();
 
-// select and copy text
+  // data.push([thisTime, thisValue]);
+  console.log("sociability: ", thisValue);
+  // console.log("sociability: ", thisTime, thisValue);
+}
 
-function updateSelection() {
-  // let thisText = document.getSelection().toString();
-  let thisText = document.getSelection().toString()
-  console.log(thisText);
-  if (thisText != "") {
-    // console.log("last selected: "+thisText);
-    lastSelected = thisText;  
+function updateAdv()
+{ 
+  let thisTime = millis() - startTime;
+  let thisValue = advslider.value();
+
+  // data.push([thisTime, thisValue]);
+  console.log("adventure: ", thisValue);
+  // console.log("sociability: ", thisTime, thisValue);
+}
+
+function toggleRecording() {
+  if (bRecording) {
+    bRecording = false;
+    audiobtn.style('background-color', '#f0f0f0');
+  } else {
+    bRecording = true;
+    audiobtn.style('background-color', 'red');
   }
 }
