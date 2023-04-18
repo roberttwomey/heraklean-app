@@ -1,6 +1,16 @@
 # Heraklean App
 interactive sound-walk app
 
+# Setup
+
+## npm Setup
+
+```npm install dotenv openai socket.io```
+
+## Usage
+
+```node server.js```
+# ----- unused ------
 ## Setup
 
 ### Create environment
@@ -18,6 +28,7 @@ interactive sound-walk app
 ## Usage
 
 ```node stream-test.js```
+
 
 
 
