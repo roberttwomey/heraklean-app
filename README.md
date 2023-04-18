@@ -1,5 +1,5 @@
-# radio-writing-tool
-AI Co-Authoring tool for Radio Play
+# Heraklean App
+interactive sound-walk app
 
 ## Setup
 
@@ -57,7 +57,6 @@ open `localhost:8080` in Safari (speechRec isn't working in edge)
 npm install pm2 -g
 npm install -g express
 ```
-
 
 
 ### Running with pm2
