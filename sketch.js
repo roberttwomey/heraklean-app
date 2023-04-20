@@ -1,6 +1,8 @@
 // NOTE: this app has migrated to: 
 // https://github.com/roberttwomey/heraklean-app
 
+// weather radio from here: https://editor.p5js.org/robert.twomey/sketches/edH7FDhyw
+
 let title;
 
 let slider;
@@ -22,19 +24,26 @@ let vid;
 // screen 1
 let charsel, chartext, seltext;
 let characters = [
-  
-  'Ariana Omahan',
-  'Leo Lightning',
-  'Misael Maelstrom',
-  'Eurydice Diaz',
-  'Gaia Solange',
-  'Icarus O’brien',
-  'Hector Hailstorm',
-  'Jason Schwartz',
-  'Orion Tillman',
-  'Lily Padilla',
   'Clio Jones',
+  'Dion Nguyen',
+  'Hera Ramirez',
+  'Leos Lightning',
+  'Demeter Greenberg',
+  'Misael Maelstrom',
+  'Odysseus Mann',
+  'Iason Schmerz',
+  'Zeus Johnson',
+  'Lily Padilla',
+  'Hydra Wiliams',
+  'Eurydice Chen',
+  'Athena Farmer',
+  'Icarus O’brien',
+  'Aphrodite Sumac',
+  'Orion Tillman',
+  'Reaper Brown',
+  'Ariana Omahan',
   'Atlas Rodriguez'
+  'Gaia Solange'
 ];
 
 // screen 2
@@ -42,22 +51,37 @@ let advslider, advtext;
 let socslider, soctext;
 
 // screen 3
-let audiotext, audiobtn;
+let audiotext, recbtn;
+let speechoutput;
 let bRecording = false;
 
 function preload() {
   // vid = createImg("clouds2.gif", "video of clouds", "anonymous", );
-  vid = createImg("clouds2.gif");
+  vid = createImg("assets/clouds2.gif");
   vid.show();
   vid.parent("wallpaper");
+
+  // story
+  loadStoryFile(storyfile);
 }
 
 function setup() {
   noCanvas();
 
+  // NOT USED
   table = new p5.Table();
   table.addColumn("time");
   table.addColumn("value");
+  // NOT USED
+
+  // next button
+  next = createButton("start");
+  next.parent("nextbtn");
+  // next.style("font-size", "24pt");
+  next.size(120, 40);
+  next.style("top", "400px");
+  next.style("margin", "0 auto");
+  next.mousePressed(advanceInterface);
 
   // screen 0
   createSplashScreen();
@@ -65,20 +89,15 @@ function setup() {
   // screen 1
   createCharSelector();  
   
-  // next button
-  next = createButton("start");
-  next.parent("nextbtn");
-  // next.style("font-size", "24pt");
-  next.size(120, 40);
-  next.elt.style.marginTop='400px';
-  next.mousePressed(advanceInterface);
-  
   // screen 2
   createSliders()
 
   // screen 3
-  createAudioCheck();
+  createMicCheck();
   
+  // sreen 4
+  setupRadio();
+
   startTime = millis();
 
 }
@@ -91,7 +110,7 @@ function mySelectEvent() {
 
 function advanceInterface() {
   screennum += 1;
-  if (screennum > 4) {
+  if (screennum > 5) {
     screennum = 0;
     next.html('next');
   }
@@ -100,11 +119,11 @@ function advanceInterface() {
 }
 
 function renderInterface() {
-  // next.position(windowWidth/2, windowHeight-100);
+  // display appropriate interface
   if (screennum == 0) {
-    vid.show(); // hides the html video loader
+    vid.show(); // shows the html video
   } else if (screennum == 1) {
-    vid.hide(); // hides the html video loader
+    vid.hide(); // hides the html video
     next.html('next');
     chartext.show();
     charsel.show();
@@ -123,11 +142,20 @@ function renderInterface() {
     socslider.hide();
     
     audiotext.show();
-    audiobtn.show();
+    recbtn.show();
+    speechoutput.show();
+    toggleRecButton(); // start to listen
+    doStart();
   } else if (screennum == 4) {
     audiotext.hide();
-    audiobtn.hide();
+    recbtn.hide();
+    speechoutput.hide();
     
+    showRadio();
+
+  } else if (screennum == 5) {
+    hideRadio();
+
     next.html('begin...');
   }
 }
@@ -162,24 +190,32 @@ function createCharSelector() {
   charsel.hide();
 }
 
-function createAudioCheck() {
+function createMicCheck() {
   // audio text
-  audiotext = createP("test your microphone.<br>speak now:");
+  audiotext = createP("test your microphone");
   audiotext.parent("contents");
   // audiotext.style("font-size", "24pt");
   audiotext.style("top", "100px");
   audiotext.hide();
-  
-  // record button
-  audiobtn = createButton("record");
-  audiobtn.parent("contents");
-  // audiobtn.style("font-size", "24pt");
-  audiobtn.size(120, 40);
-  audiobtn.style("top", "120px");
-  audiobtn.style("margin", "0 auto");
-  audiobtn.mousePressed(toggleRecording);
-  audiobtn.hide();
 
+  // record button
+  recbtn = createButton("rec");
+  recbtn.parent("contents");
+  // recbtn.style("font-size", "24pt");
+  recbtn.size(120, 40);
+  // recbtn.style("top", "10px");
+  recbtn.style("margin", "0 auto");
+  recbtn.mousePressed(toggleRecButton);
+  recbtn.hide();
+
+  // audio text
+  speechoutput = createP("(speak now)");
+  speechoutput.parent("contents");
+  speechoutput.id("speech");
+  // audiotext.style("font-size", "24pt");
+  speechoutput.style("top", "140px");
+  speechoutput.style("color", "gray");
+  speechoutput.hide();  
 }
 
 function createSliders() {
@@ -193,7 +229,8 @@ function createSliders() {
   // adventure slider
   advslider = createSlider(-5, 5, 0);
   advslider.style("width", "90%");
-  advslider.style("top", "140px");
+  advslider.style("max-width", "400px");
+  advslider.style("top", "120px");
   advslider.style("margin", "0 auto");
   advslider.parent("contents");
   advslider.input(updateAdv);
@@ -209,7 +246,8 @@ function createSliders() {
   // sociability slider
   socslider = createSlider(-5, 5, 0);
   socslider.style("width", "90%");
-  socslider.style("top", "140px");
+  socslider.style("max-width", "400px");
+  socslider.style("top", "120px");
   socslider.style("margin", "0 auto");
   socslider.parent("contents");
   socslider.input(updateSoc);
@@ -235,12 +273,12 @@ function updateAdv()
   // console.log("sociability: ", thisTime, thisValue);
 }
 
-function toggleRecording() {
+function toggleRecButton() {
   if (bRecording) {
     bRecording = false;
-    audiobtn.style('background-color', '#f0f0f0');
+    recbtn.style('background-color', '#f0f0f0');
   } else {
     bRecording = true;
-    audiobtn.style('background-color', 'red');
+    recbtn.style('background-color', 'red');
   }
 }

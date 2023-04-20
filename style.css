@@ -37,3 +37,14 @@ html, body {
   font-family: Arial, Helvetica, sans-serif;
   
 }
+
+button {
+  position: relative;
+  display: block;
+}
+
+
+img {
+  width: 100%;
+  height: auto;
+}
