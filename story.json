@@ -1,18 +1,22 @@
 {
     "start": {
       "text": "This is the beginning of the story. Choose between options 2 or 3",
-      "next": ["2", "3"]
+      "next": ["2", "3"],
+      "keywords": ["start", "beginning"]
     },
     "2": {
       "text": "Here we are at option 2",
-      "next": ["finish"]
+      "next": ["finish", "3"],
+      "keywords": ["two", "2"]
     },
     "3": {
       "text": "Here we are at option 3",
-      "next": ["finish"]
+      "next": ["finish", "2"],
+      "keywords": ["three", "3"]
     },
     "finish": {
       "text": "Now we are done.",
-      "next": []
+      "next": [],
+      "keywords": ["finish", "end", "exit"]
     }
   }

@@ -68,9 +68,22 @@ const speechSynth = window.speechSynthesis;
 
 function processSpeech(said) {
   // said contains the string that was heard
+  for(idx in storypoints[thisLabel].next) {
+    // loop over next possibilities for this storypoint
+    let nextidx = storypoints[thisLabel].next[idx];
+    for (keyidx in storypoints[nextidx].keywords) {
+      // check all the keyphrases for this storypoint
+      let phrase = storypoints[nextidx].keywords[keyidx];
+      if(said.includes(phrase)) {
+        // we found the next step to move to
+        thisLabel=nextidx;
+        bNewStep=true;
+      }
+    }
+  }
   
-  
-  sayAndListen("I heard " + said);
+  // sayAndListen("I heard " + said);
+  sayAndListen("I heard "+said+"."+storypoints[thisLabel].text);
 }
 
 function doStart() {
