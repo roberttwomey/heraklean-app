@@ -14,17 +14,17 @@
  let lnkaudio, laxaudio, omaaudio;
  let lnkbutton, laxbutton, omabutton;
  let audioCtx;
- let audioIn;
  let bIsPlaying = false;
  let cnv;
+ let radiotext; 
 
  function setupRadio() {
-  cnv = createCanvas(200, 110);
-  cnv.parent("contents");
-  cnv.style("margin", "0 auto")
-  background(255, 0, 0);
-  textAlign(CENTER);
-  cnv.hide();
+  // cnv = createCanvas(200, 110);
+  // cnv.parent("contents");
+  // cnv.style("margin", "0 auto")
+  // background(255, 0, 0);
+  // textAlign(CENTER);
+  // cnv.hide();
 
    // grab p5.sound audio context
    audioCtx = getAudioContext();
@@ -34,30 +34,36 @@
    laxaudio = createAndConnect("https://wxradio.org/CA-LosAngeles-KWO37");
    mmaudio = createAndConnect("https://wxradio.org/CA-MontereyMarine-WWF64")
    
+   radiotext = createP(story["radio"].text);
+   radiotext.style("position", "relative");
+   radiotext.parent("contents");
+   radiotext.style("top", "200px");
+
    lnkbutton = createButton('WXM20 - LNK');
    lnkbutton.parent("contents");
-   lnkbutton.style("top", "40px");
+   lnkbutton.style("top", "400px");
    lnkbutton.style("margin", "0 auto");
-   // lnkbutton.position(0, 200);
+   lnkbutton.style("position", "relative");
+
    
    omabutton = createButton('KIH61 - OMA');
    omabutton.parent("contents");
-   omabutton.style("top", "60px");
+   omabutton.style("top", "420px");
    omabutton.style("margin", "0 auto");
-   // omabutton.position(0, 225);
-   
+   omabutton.style("position", "relative");
+
    laxbutton = createButton('KWO37 - LAX');
    laxbutton.parent("contents");
-   laxbutton.style("top", "80px");
+   laxbutton.style("top", "440px");
    laxbutton.style("margin", "0 auto");
-   // laxbutton.position(0, 250);
+  //  laxbutton.style("position", "relative");
    
    mmbutton = createButton("WWF64 - MMAR");
    mmbutton.parent("contents");
-   mmbutton.style("top", "100px");
+   mmbutton.style("top", "460px");
    mmbutton.style("margin", "0 auto");
-   // mmbutton.position(0, 275);
-   
+  //  mmbutton.style("position", "relative");
+      
    lnkbutton.mousePressed(changelnk);
    omabutton.mousePressed(changeoma);
    laxbutton.mousePressed(changelax);
@@ -67,15 +73,16 @@
  }
 
  function hideRadio() {
-  cnv.hide();
+  // cnv.hide();
   lnkbutton.hide();
   omabutton.hide();
   laxbutton.hide();
   mmbutton.hide();
+  radiotext.hide();
  }
 
  function showRadio() {
-  cnv.show();
+  // cnv.show();
   lnkbutton.show();
   omabutton.show();
   laxbutton.show();
@@ -97,16 +104,16 @@
    return thisaudio;
  }
  
- function draw() {
-   background(255, 0, 0);
-   if (lnkaudio.paused && laxaudio.paused && omaaudio.paused && mmaudio.paused) {
-     background(128);
-     text('click below to start audio', width/2, height/2);
-   } else {
-     background(0, 255, 0);
-     text('audio is enabled', width/2, height/2);
-   }
- }
+//  function draw() {
+//    background(255, 0, 0);
+//    if (lnkaudio.paused && laxaudio.paused && omaaudio.paused && mmaudio.paused) {
+//      background(128);
+//      text('click below to start audio', width/2, height/2);
+//    } else {
+//      background(0, 255, 0);
+//      text('audio is enabled', width/2, height/2);
+//    }
+//  }
  
  function changelnk() {
    if (!bIsPlaying) {

@@ -1,4 +1,14 @@
 {
+    "mictest": {
+      "text": "Test your microphone.<br> Say done when complete.",
+      "next": ["waiting"],
+      "keywords": ["mike", "check", "test"]
+    },
+    "waiting": {
+      "text": "Waiting for the experience to begin",
+      "next": ["start"],
+      "keywords": ["done"]
+    },
     "start": {
       "text": "This is the beginning of the story. Choose between options 2 or 3",
       "next": ["2", "3"],
@@ -18,5 +28,10 @@
       "text": "Now we are done.",
       "next": [],
       "keywords": ["finish", "end", "exit"]
+    }, 
+    "radio": {
+        "text": "HeraKlean Radio",
+        "next": [],
+        "keywords": ["radio"]
     }
   }

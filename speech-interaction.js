@@ -6,7 +6,7 @@
 
 // story stuff
 let storyfile = "story.json";
-let storypoints; // structure for story from JSON
+let story; // structure for story from JSON
 let thisLabel; // label for current point in narrative
 
 // interaction stuff
@@ -46,6 +46,10 @@ speechRec.onresult = (event) => {
     speechoutput.innerHTML = said;
     speechoutput.style.color = 'black';
     
+    // done listening
+    bListening = false;
+    recbtn.style('background-color', '#f0f0f0');  
+    
     // display what was said
     // speechSynth.speak(said);
 
@@ -68,31 +72,39 @@ const speechSynth = window.speechSynthesis;
 
 function processSpeech(said) {
   // said contains the string that was heard
-  for(idx in storypoints[thisLabel].next) {
+  console.log(thisLabel, said)
+  for(idx in story[thisLabel].next) {
     // loop over next possibilities for this storypoint
-    let nextidx = storypoints[thisLabel].next[idx];
-    for (keyidx in storypoints[nextidx].keywords) {
+    let nextidx = story[thisLabel].next[idx];
+    for (keyidx in story[nextidx].keywords) {
       // check all the keyphrases for this storypoint
-      let phrase = storypoints[nextidx].keywords[keyidx];
+      let phrase = story[nextidx].keywords[keyidx];
       if(said.includes(phrase)) {
         // we found the next step to move to
         thisLabel=nextidx;
         bNewStep=true;
+        if(phrase=="done") {
+          // sayAndStartRadio(story["waiting"].text);
+          stopListening();
+          advanceInterface();
+          return;
+        }
       }
     }
   }
   
   // sayAndListen("I heard " + said);
-  sayAndListen("I heard "+said+"."+storypoints[thisLabel].text);
+  // sayAndListen(story[thisLabel].text);
+  sayAndListen(story[thisLabel].text);
 }
 
 function doStart() {
   console.log("starting");
   
   bNewStep = true;
-  thisLabel = "start";
+  thisLabel = "mictest";
   // thisLabel = "start";
-  sayAndListen(storypoints[thisLabel].text);
+  sayAndListen(story[thisLabel].text);
 }
 
 function sayAndListen(thistext) {
@@ -103,22 +115,37 @@ function sayAndListen(thistext) {
     );
 
     console.log("... now listening ...");
-    toggleRecButton();
+    // toggleRecButton();
+
+    recbtn.style('background-color', 'red');
     speechRec.start(false, true);
   };
   
   speechSynth.speak(utterThis);
 }
 
-function loadStoryFile(url) {
-  storypoints = loadJSON(url);
+function sayAndStartRadio(thistext) {
+  const utterThis = new SpeechSynthesisUtterance(thistext);
+  utterThis.onend = (event) => {
+    console.log(
+      `Utterance has finished being spoken after ${event.elapsedTime} seconds.`
+    );
+    // recbtn.style('background-color', 'red');
+    // speechRec.start(false, true);
+    changeoma();  
+  };
+
+  stopListening();
+  advanceInterface();
+  speechSynth.speak(utterThis);
 }
 
-// start when clicked on app
+function stopListening() {
+  speechRec.stop();
+  bListening = false;
+  recbtn.style('background-color', '#f0f0f0');  
+}
 
-// document.onclick = function () {
-//   bNewStep = true;
-//   thisLabel = "2";
-//   // thisLabel = "start";
-//   sayAndListen(storypoints[thisLabel].text);
-// };
+function loadStoryFile(url) {
+  story = loadJSON(url);
+}

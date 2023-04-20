@@ -53,7 +53,11 @@ let socslider, soctext;
 // screen 3
 let audiotext, recbtn;
 let speechoutput;
-let bRecording = false;
+let bListening = false;
+
+// screen 4
+let waittext;
+let timeStartExp;
 
 function preload() {
   // vid = createImg("clouds2.gif", "video of clouds", "anonymous", );
@@ -79,7 +83,8 @@ function setup() {
   next.parent("nextbtn");
   // next.style("font-size", "24pt");
   next.size(120, 40);
-  next.style("top", "400px");
+  // next.style("top", "400px");
+  next.style("top", "50vh");
   next.style("margin", "0 auto");
   next.mousePressed(advanceInterface);
 
@@ -140,26 +145,54 @@ function renderInterface() {
     advslider.hide();
     soctext.hide();
     socslider.hide();
-    
+
     audiotext.show();
     recbtn.show();
     speechoutput.show();
-    toggleRecButton(); // start to listen
+    // toggleRecButton();
+    audiotext.html(story["mictest"].text);
     doStart();
   } else if (screennum == 4) {
+    stopListening();
+    speechSynth.cancel();
+    
+    // WAITING
     audiotext.hide();
     recbtn.hide();
     speechoutput.hide();
-    
+
+    next.hide();
+
+    waittext = createP(story["waiting"].text);
+    waittext.style("position", "relative");
+    waittext.parent("contents");
+    waittext.style("top", "50vh");
+
+    timeStartExp = millis() + 10*1000;
+    waitToStart();
+  } else if (screennum == 5) {    
+    waittext.hide();
+
     showRadio();
-
-  } else if (screennum == 5) {
-    hideRadio();
-
-    next.html('begin...');
+    next.hide();
+    radiotext.show();
+    let startthis = sample([changeoma, changelax, changelnk, changemm]);
+    startthis();
   }
 }
 
+function sample(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+function waitToStart() {
+  if (millis() - timeStartExp < 0) {
+    setTimeout(waitToStart, 100)
+  } else {
+    console.log("advancing...")
+    advanceInterface();
+  }
+}
 
 function createSplashScreen() {
   // vid.show();
@@ -192,7 +225,7 @@ function createCharSelector() {
 
 function createMicCheck() {
   // audio text
-  audiotext = createP("test your microphone");
+  audiotext = createP("Test your microphone. Exit when done.");
   audiotext.parent("contents");
   // audiotext.style("font-size", "24pt");
   audiotext.style("top", "100px");
@@ -205,7 +238,7 @@ function createMicCheck() {
   recbtn.size(120, 40);
   // recbtn.style("top", "10px");
   recbtn.style("margin", "0 auto");
-  recbtn.mousePressed(toggleRecButton);
+  recbtn.mousePressed(stopListening);
   recbtn.hide();
 
   // audio text
@@ -271,14 +304,4 @@ function updateAdv()
   // data.push([thisTime, thisValue]);
   console.log("adventure: ", thisValue);
   // console.log("sociability: ", thisTime, thisValue);
-}
-
-function toggleRecButton() {
-  if (bRecording) {
-    bRecording = false;
-    recbtn.style('background-color', '#f0f0f0');
-  } else {
-    bRecording = true;
-    recbtn.style('background-color', 'red');
-  }
 }
