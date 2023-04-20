@@ -42,7 +42,7 @@ let characters = [
   'Orion Tillman',
   'Reaper Brown',
   'Ariana Omahan',
-  'Atlas Rodriguez'
+  'Atlas Rodriguez',
   'Gaia Solange'
 ];
 

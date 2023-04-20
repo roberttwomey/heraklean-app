@@ -36,37 +36,31 @@ speechRec.maxAlternatives = 1;
 
 speechRec.onresult = (event) => {
   // DOM element to display results
-  console.log(event);
   let speechoutput = document.getElementById("speech");
-  console.log(speechoutput, lastHtml);
   let said = event.results[0][0].transcript;
-  // console.log(said);
+  
   if (event.results[0].isFinal == true) {
-    // final, add to html
+    // final result: add to html
     // let newHtml = lastHtml + `<p> ${said} </p>`;
     let newHtml = lastHtml + "<p>" + said + "</p>";
-    console.log(newHtml);
-    // speechoutput.innerHTML = newHtml;
     speechoutput.innerHTML = said;
-    // speechoutput.SetHTML(newHtml);
+    speechoutput.style.color = 'black';
+    
     // display what was said
     // speechSynth.speak(said);
 
     processSpeech(said);
     
+    // advance and liston
     bNewStep = true;
     count += 1;
     lastHtml = speechoutput.innerHTML;
   } else {
-    // temp, add in light gray
+    // temp result: display in light gray
     let tempspeechoutput = lastHtml + "<p style='color: gray'>" + said + "</p>";
     // speechoutput.html(tempspeechoutput);
     speechoutput.innerHTML = tempspeechoutput;
   }
-
-  // const color = event.results[0][0].transcript;
-  // diagnostic.textContent = `Result received: ${color}.`;
-  // bg.style.backgroundColor = color;
 };
 
 // synthesis
@@ -78,22 +72,6 @@ function processSpeech(said) {
   
   sayAndListen("I heard " + said);
 }
-
-// let next, w, h;
-// function setup() {
-//   noCanvas();
-  
-//   w = 300;//displayWidth;
-//   h = 200;//displayHeight;
-  
-//   // next button
-//   next = createButton("start");
-//   // next.style("color", "green");
-//   next.style("font-size", "24pt");
-//   next.size(120, 40);
-//   next.position(w/2, h-100);
-//   next.mousePressed(doStart);
-// }
 
 function doStart() {
   console.log("starting");
