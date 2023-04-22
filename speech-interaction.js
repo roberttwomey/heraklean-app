@@ -4,10 +4,10 @@
 // Speech interaction for Cleaning the Stables
 // heraklean.us | herakles.roberttwomey.com | rtwomey@unl.edu | 2023
 
+
 // story stuff
 let storyfile = "story.json";
 let story; // structure for story from JSON
-let thisLabel; // label for current point in narrative
 
 // interaction stuff
 let bNewStep = false;
@@ -57,7 +57,6 @@ speechRec.onresult = (event) => {
     
     // advance and liston
     bNewStep = true;
-    count += 1;
     lastHtml = speechoutput.innerHTML;
   } else {
     // temp result: display in light gray
@@ -72,16 +71,16 @@ const speechSynth = window.speechSynthesis;
 
 function processSpeech(said) {
   // said contains the string that was heard
-  console.log(thisLabel, said)
-  for(idx in story[thisLabel].next) {
+  console.log(thisState, said)
+  for(idx in story[thisState].next) {
     // loop over next possibilities for this storypoint
-    let nextidx = story[thisLabel].next[idx];
+    let nextidx = story[thisState].next[idx];
     for (keyidx in story[nextidx].keywords) {
       // check all the keyphrases for this storypoint
       let phrase = story[nextidx].keywords[keyidx];
       if(said.includes(phrase)) {
         // we found the next step to move to
-        thisLabel=nextidx;
+        thisState=nextidx;
         bNewStep=true;
         if(phrase=="done") {
           // sayAndStartRadio(story["waiting"].text);
@@ -94,17 +93,22 @@ function processSpeech(said) {
   }
   
   // sayAndListen("I heard " + said);
-  // sayAndListen(story[thisLabel].text);
-  sayAndListen(story[thisLabel].text);
+  // sayAndListen(story[thisState].text);
+  sayAndListen(story[thisState].text);
 }
 
 function doStart() {
   console.log("starting");
+  bNewStep = true;
+  sayAndListen(story[thisState].text);
+}
+
+function doMicTest() {
+  console.log("doing mic test");
   
   bNewStep = true;
-  thisLabel = "mictest";
-  // thisLabel = "start";
-  sayAndListen(story[thisLabel].text);
+  thisState = "mictest";
+  sayAndListen(story[thisState].text);
 }
 
 function sayAndListen(thistext) {
@@ -146,6 +150,3 @@ function stopListening() {
   recbtn.style('background-color', '#f0f0f0');  
 }
 
-function loadStoryFile(url) {
-  story = loadJSON(url);
-}

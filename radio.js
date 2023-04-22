@@ -45,7 +45,6 @@
    lnkbutton.style("margin", "0 auto");
    lnkbutton.style("position", "relative");
 
-   
    omabutton = createButton('KIH61 - OMA');
    omabutton.parent("contents");
    omabutton.style("top", "420px");

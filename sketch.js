@@ -3,20 +3,18 @@
 
 // weather radio from here: https://editor.p5js.org/robert.twomey/sketches/edH7FDhyw
 
-let title;
-
-let slider;
-let start, stop;
-let startTime,
-  started = false;
-let timer;
-let samples;
-
-let table;
+// LEFTOVERS
+// let title;
+// let start, stop;
+// let startTime, started = false;
+// let timer;
+// let samples;
+// let table;
 
 // advance through screens
-let screennum = 0;
-let next;
+// let screennum = 0;
+let nextbutton;
+let thisState;
 
 // screen 0
 let vid;
@@ -56,7 +54,7 @@ let speechoutput;
 let bListening = false;
 
 // screen 4
-let waittext;
+let waittext, timertext;
 let timeStartExp;
 
 function preload() {
@@ -73,20 +71,20 @@ function setup() {
   noCanvas();
 
   // NOT USED
-  table = new p5.Table();
-  table.addColumn("time");
-  table.addColumn("value");
+  // table = new p5.Table();
+  // table.addColumn("time");
+  // table.addColumn("value");
   // NOT USED
 
-  // next button
-  next = createButton("start");
-  next.parent("nextbtn");
-  // next.style("font-size", "24pt");
-  next.size(120, 40);
-  // next.style("top", "400px");
-  next.style("top", "50vh");
-  next.style("margin", "0 auto");
-  next.mousePressed(advanceInterface);
+  // nextbutton button
+  nextbutton = createButton("start");
+  nextbutton.parent("nextbuttonbtn");
+  // nextbutton.style("font-size", "24pt");
+  nextbutton.size(120, 40);
+  // nextbutton.style("top", "400px");
+  nextbutton.style("top", "50vh");
+  nextbutton.style("margin", "0 auto");
+  nextbutton.mousePressed(advanceInterface);
 
   // screen 0
   createSplashScreen();
@@ -103,8 +101,8 @@ function setup() {
   // sreen 4
   setupRadio();
 
-  startTime = millis();
-
+  // startTime = millis();
+  thisState = "splash"
 }
 
 function mySelectEvent() {
@@ -114,25 +112,33 @@ function mySelectEvent() {
 }
 
 function advanceInterface() {
-  screennum += 1;
-  if (screennum > 5) {
-    screennum = 0;
-    next.html('next');
-  }
-  console.log("+: "+screennum);
+  // if (thisState == "splash") {screennum += 1;
+  // if (screennum > 5) {
+  //   screennum = 0;
+  //   nextbutton.html('enter');
+  // }
+  
+  stopListening();
+  speechSynth.cancel();
+  
+  let nextState = story[thisState].next[0];
+  thisState = nextState;
+
+  console.log("--> moved to "+thisState);
   renderInterface();
 }
 
 function renderInterface() {
+
   // display appropriate interface
-  if (screennum == 0) {
+  if (thisState == "splash") {
     vid.show(); // shows the html video
-  } else if (screennum == 1) {
+  } else if (thisState == "character") {
     vid.hide(); // hides the html video
-    next.html('next');
+    nextbutton.html('next');
     chartext.show();
     charsel.show();
-  } else if (screennum == 2) {
+  } else if (thisState == "preferences") {
     chartext.hide();
     charsel.hide();
     
@@ -140,7 +146,7 @@ function renderInterface() {
     advslider.show();
     soctext.show();
     socslider.show();
-  } else if (screennum == 3) {
+  } else if (thisState == "mictest") {
     advtext.hide();
     advslider.hide();
     soctext.hide();
@@ -151,30 +157,50 @@ function renderInterface() {
     speechoutput.show();
     // toggleRecButton();
     audiotext.html(story["mictest"].text);
-    doStart();
-  } else if (screennum == 4) {
-    stopListening();
-    speechSynth.cancel();
-    
+    doMicTest();
+
+  } else if (thisState == "waiting") {
     // WAITING
     audiotext.hide();
     recbtn.hide();
     speechoutput.hide();
 
-    next.hide();
+    nextbutton.hide();
 
     waittext = createP(story["waiting"].text);
     waittext.style("position", "relative");
     waittext.parent("contents");
     waittext.style("top", "50vh");
 
-    timeStartExp = millis() + 10*1000;
+    let waittime = 5*1000;
+    timertext = createP(Math.round(waittime/1000))
+    timertext.parent("wallpaper");
+    timertext.style("font-size", "384pt");
+    timertext.style("color", "#f0f0f0");
+    timertext.show();
+
+    timeStartExp = millis() + waittime;
     waitToStart();
-  } else if (screennum == 5) {    
+
+  } else if (thisState == "start") {
+    // should just make a hideAll() function
+    timertext.hide();  
+    waittext.hide();
+
+    // show rec button and speech output
+    audiotext.show();
+    audiotext.html(charsel.value());
+    audiotext.style("top", "45vh");
+    recbtn.show();
+    recbtn.style("top", "50vh");
+    speechoutput.show();
+    doStart();
+  } else if (thisState == "radio") {  
+    timertext.hide();  
     waittext.hide();
 
     showRadio();
-    next.hide();
+    nextbutton.hide();
     radiotext.show();
     let startthis = sample([changeoma, changelax, changelnk, changemm]);
     startthis();
@@ -186,10 +212,11 @@ function sample(array) {
 }
 
 function waitToStart() {
-  if (millis() - timeStartExp < 0) {
+  let timeleft = timeStartExp - millis();
+  if (timeleft > 0) {
+    timertext.html(Math.round(timeleft/1000));
     setTimeout(waitToStart, 100)
   } else {
-    console.log("advancing...")
     advanceInterface();
   }
 }
@@ -288,7 +315,7 @@ function createSliders() {
 }
 
 function updateSoc() {
-  let thisTime = millis() - startTime;
+  // let thisTime = millis() - startTime;
   let thisValue = socslider.value();
 
   // data.push([thisTime, thisValue]);
@@ -298,10 +325,14 @@ function updateSoc() {
 
 function updateAdv()
 { 
-  let thisTime = millis() - startTime;
+  // let thisTime = millis() - startTime;
   let thisValue = advslider.value();
 
   // data.push([thisTime, thisValue]);
   console.log("adventure: ", thisValue);
   // console.log("sociability: ", thisTime, thisValue);
+}
+
+function loadStoryFile(url) {
+  story = loadJSON(url);
 }

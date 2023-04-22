@@ -1,4 +1,19 @@
 {
+    "splash": {
+        "text": "",
+        "next": ["character"],
+        "keywords": ["splash"]
+    },
+    "character": {
+        "text": "Select your character:",
+        "next": ["preferences"],
+        "keywords": [""]
+    }, 
+    "preferences": {
+        "text": "Select your preferences:",
+        "next": ["mictest"],
+        "keywords": [""]
+    },
     "mictest": {
       "text": "Test your microphone.<br> Say done when complete.",
       "next": ["waiting"],
@@ -26,7 +41,7 @@
     },
     "finish": {
       "text": "Now we are done.",
-      "next": [],
+      "next": ["splash"],
       "keywords": ["finish", "end", "exit"]
     }, 
     "radio": {
