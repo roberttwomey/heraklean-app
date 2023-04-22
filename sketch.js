@@ -13,7 +13,7 @@
 
 // advance through screens
 // let screennum = 0;
-let nextbutton;
+let nextbtn;
 let thisState;
 
 // screen 0
@@ -76,15 +76,15 @@ function setup() {
   // table.addColumn("value");
   // NOT USED
 
-  // nextbutton button
-  nextbutton = createButton("start");
-  nextbutton.parent("nextbuttonbtn");
-  // nextbutton.style("font-size", "24pt");
-  nextbutton.size(120, 40);
-  // nextbutton.style("top", "400px");
-  nextbutton.style("top", "50vh");
-  nextbutton.style("margin", "0 auto");
-  nextbutton.mousePressed(advanceInterface);
+  // nextbtn button
+  nextbtn = createButton("start");
+  nextbtn.parent("contents");
+  // nextbtn.style("font-size", "24pt");
+  nextbtn.size(120, 40);
+  // nextbtn.style("top", "400px");
+  nextbtn.style("top", "50vh");
+  nextbtn.style("margin", "0 auto");
+  nextbtn.mousePressed(advanceInterface);
 
   // screen 0
   createSplashScreen();
@@ -115,7 +115,7 @@ function advanceInterface() {
   // if (thisState == "splash") {screennum += 1;
   // if (screennum > 5) {
   //   screennum = 0;
-  //   nextbutton.html('enter');
+  //   nextbtn.html('enter');
   // }
   
   stopListening();
@@ -135,7 +135,7 @@ function renderInterface() {
     vid.show(); // shows the html video
   } else if (thisState == "character") {
     vid.hide(); // hides the html video
-    nextbutton.html('next');
+    nextbtn.html('next');
     chartext.show();
     charsel.show();
   } else if (thisState == "preferences") {
@@ -165,18 +165,23 @@ function renderInterface() {
     recbtn.hide();
     speechoutput.hide();
 
-    nextbutton.hide();
+    nextbtn.hide();
 
     waittext = createP(story["waiting"].text);
     waittext.style("position", "relative");
     waittext.parent("contents");
     waittext.style("top", "50vh");
+    waittext.style("line-height", "24px");
 
-    let waittime = 5*1000;
+    let waittime = 25*1000;
     timertext = createP(Math.round(waittime/1000))
-    timertext.parent("wallpaper");
+    timertext.parent("countdown");
+    timertext.style("position", "relative");
     timertext.style("font-size", "384pt");
     timertext.style("color", "#f0f0f0");
+    timertext.style("top", "50vh");
+    timertext.style("margin", "0 auto");
+    timertext.style("line-height", "90px");
     timertext.show();
 
     timeStartExp = millis() + waittime;
@@ -200,7 +205,7 @@ function renderInterface() {
     waittext.hide();
 
     showRadio();
-    nextbutton.hide();
+    nextbtn.hide();
     radiotext.show();
     let startthis = sample([changeoma, changelax, changelnk, changemm]);
     startthis();
