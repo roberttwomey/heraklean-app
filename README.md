@@ -12,7 +12,10 @@ interactive sound-walk app
 
 install npm: 
 
-```apt-get install npm```
+```
+sudo apt update
+sudo apt-get install nodejs npm
+```
 
 install modules: 
 
