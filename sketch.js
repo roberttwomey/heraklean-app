@@ -100,7 +100,6 @@ function setup() {
   // screen 5
   setupRadio();
   
-
   // startTime = millis();
   thisState = "splash"
 }
@@ -112,32 +111,30 @@ function mySelectEvent() {
 }
 
 function advanceInterface() {
-  // if (thisState == "splash") {screennum += 1;
-  // if (screennum > 5) {
-  //   screennum = 0;
-  //   nextbtn.html('enter');
-  // }
-
   // if we have not selected a character
   if (thisState == "character" && charsel.value() == "") {
+    // select one randomly
     charsel.selected(sample(characters));
   }
+
+  // stop speaking and listening, just in case
   stopListening();
   speechSynth.cancel();
   
   let nextState = story[thisState].next[0];
   thisState = nextState;
-
   console.log("--> moved to "+thisState);
+
   renderInterface();
 }
 
 function renderInterface() {
+  // clear previous layers
   hideAll();
 
   // display appropriate interface
   if (thisState == "splash") {
-    vid.show(); // shows the html video
+    vid.show();
     nextbtn.html("start");
     nextbtn.show();
   } else if (thisState == "character") {
@@ -169,22 +166,7 @@ function renderInterface() {
 
     timeStartExp = millis() + waittime;
     waitToStart();
-
-  // } else if (thisState == "start") {
-  //   // should just make a hideAll() function
-  //   // timertext.hide();  
-  //   // waittext.hide();
-
-  //   // show rec button and speech output
-  //   audiotext.show();
-  //   audiotext.html(charsel.value());
-  //   audiotext.style("top", "45vh");
-  //   recbtn.show();
-  //   recbtn.style("top", "50vh");
-  //   speechoutput.show();
-  //   doStart();
   } else if (thisState == "radio") {  
-
     showRadio();
     radiotext.show();
     let startthis = sample([changeoma, changelax, changelnk, changemm]);
@@ -219,6 +201,7 @@ function listenAndAdvance() {
     recbtn.style('background-color', 'red');
     speechoutput.html("(speak now)");
     speechoutput.style("color", "gray");
+    speechRec.addEventListener('end', () => stopListening());
     speechRec.start(false, true);
 }
 
