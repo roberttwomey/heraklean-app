@@ -3,17 +3,59 @@ interactive sound-walk app
 
 # Setup
 
+## Clone repository
+
+```git clone https://github.com/roberttwomey/heraklean-app/```
+
+
 ## npm Setup
+
+install npm: 
+
+```apt-get install npm```
+
+install modules: 
 
 ```npm install dotenv openai socket.io http-server```
 
-## Usage
+# Usage
 
+Run the server
 ```node server.js```
+
+## Better usage
+
+with pm2
+
+```npm install pm2 -g```
+
+### Running with pm2
+
+Start the app:
+```
+pm2 start server.js
+```
+
+Inspect the log:
+```
+pm2 log server.js
+```
+
+Stop the writing tool:
+```
+pm2 stop server.js
+```
+
+
 # ----- unused ------
 ## Setup
 
-### Create environment
+### Clone repository
+
+```git clone https://github.com/roberttwomey/heraklean-app/```
+
+
+### Create conda environment (local macos)
 
 ```conda create --name heraklean```
 
@@ -34,21 +76,6 @@ interactive sound-walk app
 
 # ----- OLD STUFF -----
 
-### Clone the repository
-
-```git clone https://github.com/roberttwomey/radio-writing-tool```
-
-### Create an env file with your openai key
-
-```
-touch .env
-```
-
-In the file, copy the following text. Replace XXXXXX with your openai api key (copied from your openai account)
-
-```
-OPENAI_API_KEY=XXXXXX
-```
 
 ## Usage
 
