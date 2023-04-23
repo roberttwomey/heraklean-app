@@ -1,52 +1,55 @@
 {
-    "splash": {
-        "text": "",
-        "next": ["character"],
-        "keywords": ["splash"]
-    },
-    "character": {
-        "text": "Select your character:",
-        "next": ["preferences"],
-        "keywords": [""]
-    }, 
-    "preferences": {
-        "text": "Select your preferences:",
-        "next": ["mictest"],
-        "keywords": [""]
-    },
-    "mictest": {
-      "text": "Test your microphone. Say done when complete.",
-      "next": ["waiting"],
-      "keywords": ["mike", "check", "test"]
-    },
-    "waiting": {
-      "text": "Waiting for the experience to begin",
-      "next": ["q1"],
-      "keywords": ["done"]
-    },
-    "finish": {
-      "text": "Now we are done.",
-      "next": ["splash"],
-      "keywords": ["finish", "end", "exit"]
-    }, 
-    "radio": {
-        "type": "text",
-        "text": "HeraKlean Radio",
-        "next": [],
-        "keywords": ["radio"]
-    },
-    "ext1": {
-        "type": "audio",
-        "audio": "assets/ext1.mp3",
-        "lat": 32.70384481755841,
-        "lng": -117.16384649276735,
-        "next": ["q1"]
-    },
-    "q1": {
-        "type": "question",
-        "audio": "assets/q1.mp3",
-        "lat": 32.70384481755841,
-        "lng": -117.16384649276735,
-        "next": ["splash"]
+    "showtimes": [ "4:30", "5:30", "6:30"],
+    "story": {
+        "splash": {
+            "text": "",
+            "next": ["character"],
+            "keywords": ["splash"]
+        },
+        "character": {
+            "text": "Select your character:",
+            "next": ["preferences"],
+            "keywords": [""]
+        }, 
+        "preferences": {
+            "text": "Select your preferences:",
+            "next": ["mictest"],
+            "keywords": [""]
+        },
+        "mictest": {
+            "text": "Test your microphone. Say done when complete.",
+            "next": ["waiting"],
+            "keywords": ["mike", "check", "test"]
+        },
+        "waiting": {
+            "text": "Waiting for the experience to begin",
+            "next": ["q1"],
+            "keywords": ["done"]
+        },
+        "finish": {
+            "text": "Now we are done.",
+            "next": ["splash"],
+            "keywords": ["finish", "end", "exit"]
+        }, 
+        "radio": {
+            "type": "text",
+            "text": "HeraKlean Radio",
+            "next": [],
+            "keywords": ["radio"]
+        },
+        "ext1": {
+            "type": "audio",
+            "audio": "assets/ext1.mp3",
+            "lat": 32.70384481755841,
+            "lng": -117.16384649276735,
+            "next": ["q1"]
+        },
+        "q1": {
+            "type": "question",
+            "audio": "assets/q1.mp3",
+            "lat": 32.70384481755841,
+            "lng": -117.16384649276735,
+            "next": ["splash"]
+        }
     }
-  }
+}

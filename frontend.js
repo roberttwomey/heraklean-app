@@ -21,8 +21,16 @@ function createCharSelector() {
   for (thischar in characters) {
     charsel.option(characters[thischar]);
   }
-  charsel.selected("");
-  charsel.changed(mySelectEvent);
+  
+  let myCharacter = getItem('myCharacter');
+  if (myCharacter === null) {
+    charsel.selected("");
+   } else {
+    charsel.selected(myCharacter);
+   }
+
+  // charsel.selected("");
+  charsel.changed(charSelectEvent);
   charsel.style("top", "120px");
   charsel.style("margin", "0 auto");
   charsel.parent("contents");
@@ -72,6 +80,14 @@ function createSliders() {
   advslider.parent("contents");
   advslider.input(updateAdv);
   advslider.hide();
+
+  let myval = getItem('adventure');
+  if (myval === null) {
+    advslider.value(0);
+   } else {
+    advslider.value(myval);
+   }
+
   
   // sociability
   soctext = createP("sociability");
@@ -88,6 +104,13 @@ function createSliders() {
   socslider.parent("contents");
   socslider.input(updateSoc);
   socslider.hide();
+
+  myval = getItem('sociability');
+  if (myval === null) {
+    socslider.value(0);
+   } else {
+    socslider.value(myval);
+   }
 }
 
 function createWaiting() {
@@ -114,6 +137,7 @@ function updateSoc() {
 
   // data.push([thisTime, thisValue]);
   console.log("sociability: ", thisValue);
+  storeItem("sociability", thisValue);
 }
 
 function updateAdv()
@@ -122,6 +146,7 @@ function updateAdv()
 
   // data.push([thisTime, thisValue]);
   console.log("adventure: ", thisValue);
+  storeItem("adventure", thisValue);
 }
 
 function hideAll() {

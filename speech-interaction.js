@@ -4,11 +4,6 @@
 // Speech interaction for Cleaning the Stables
 // heraklean.us | herakles.roberttwomey.com | rtwomey@unl.edu | 2023
 
-
-// story stuff
-let storyfile = "story.json";
-let story; // structure for story from JSON
-
 // interaction stuff
 let bNewStep = false;
 
@@ -145,21 +140,21 @@ function sayAndListen(thistext) {
   speechSynth.speak(utterThis);
 }
 
-function sayAndStartRadio(thistext) {
-  const utterThis = new SpeechSynthesisUtterance(thistext);
-  utterThis.onend = (event) => {
-    console.log(
-      `Utterance has finished being spoken after ${event.elapsedTime} seconds.`
-    );
-    // recbtn.style('background-color', 'red');
-    // speechRec.start(false, true);
-    changeoma();  
-  };
+// function sayAndStartRadio(thistext) {
+//   const utterThis = new SpeechSynthesisUtterance(thistext);
+//   utterThis.onend = (event) => {
+//     console.log(
+//       `Utterance has finished being spoken after ${event.elapsedTime} seconds.`
+//     );
+//     // recbtn.style('background-color', 'red');
+//     // speechRec.start(false, true);
+//     changeoma();  
+//   };
 
-  stopListening();
-  advanceInterface();
-  speechSynth.speak(utterThis);
-}
+//   stopListening();
+//   advanceInterface();
+//   speechSynth.speak(utterThis);
+// }
 
 function stopListening() {
   speechRec.stop();

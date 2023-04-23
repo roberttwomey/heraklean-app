@@ -6,16 +6,18 @@ var path = require('path');
 // Using the filesystem module
 var fs = require('fs');
 
-require('dotenv').config();
+// require('dotenv').config();
 
-const { Configuration, OpenAIApi } = require("openai");
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// const { Configuration, OpenAIApi } = require("openai");
+// const configuration = new Configuration({
+//     apiKey: process.env.OPENAI_API_KEY,
+// });
 
 var server = http.createServer(handleRequest);
-server.listen(8080);
-console.log('--== Server started on port 8080 ==--');
+// server.listen(8080);
+// console.log('--== Server started on port 8080 ==--');
+server.listen(80);
+console.log('--== Server started on port 80 ==--');
 
 // var io = require('socket.io').listen(server);
 

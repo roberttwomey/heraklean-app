@@ -18,6 +18,13 @@ let thisState;
 
 // user variables
 
+// composition
+let storyfile = "story.json";
+let jsoncontents;
+let story; // structure for story from JSON
+let showtimes; 
+
+
 // screen 0
 let vid;
 
@@ -70,7 +77,7 @@ function preload() {
   vid.parent("wallpaper");
 
   // story
-  loadStoryFile(storyfile);
+  jsoncontents = loadJSON(storyfile, parseShowData);
 }
 
 function setup() {
@@ -82,6 +89,16 @@ function setup() {
   // table.addColumn("value");
   // NOT USED
 
+  // create a unique-ish ID, from https://stackoverflow.com/a/53116778
+  
+  let uid = getItem('uid');
+  if (uid === null) {
+    uid = Date.now().toString(36) + Math.floor(Math.pow(10, 12) + Math.random() * 9*Math.pow(10, 12)).toString(36);
+    storeItem("uid", uid);
+  }
+  console.log("---", uid);
+
+  console.log(story);
   // screen 0
   createSplashScreen();
   
@@ -104,10 +121,11 @@ function setup() {
   thisState = "splash"
 }
 
-function mySelectEvent() {
-  let item = charsel.value();
+function charSelectEvent() {
+  let myChar = charsel.value();
   background(200);
-  console.log('It is a ' + item + '!');
+  console.log('Your character is ' + myChar + '!');
+  storeItem('myCharacter', myChar);
 }
 
 function advanceInterface() {
@@ -163,14 +181,13 @@ function renderInterface() {
 
     // TODO fix this formatting code. really ugly.
     timertext.show();
-
     timeStartExp = millis() + waittime;
-    waitToStart();
+    waitToStartScript();
   } else if (thisState == "radio") {  
     showRadio();
     radiotext.show();
-    let startthis = sample([changeoma, changelax, changelnk, changemm]);
-    startthis();
+    let startRandomStation = sample([changeoma, changelax, changelnk, changemm]);
+    startRandomStation();
   } else if (story[thisState].type == "audio") {    
     chartext.show()
     chartext.html(charsel.value());
@@ -180,7 +197,6 @@ function renderInterface() {
     audioFile.onended(advanceInterface);
     // garbage collection of file that just stopped
   } else if (story[thisState].type == "question") {
-    hideAll();
     chartext.show()
     chartext.html(charsel.value());
     recbtn.show();
@@ -209,16 +225,53 @@ function sample(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function waitToStart() {
+function waitToStartScript() {
   let timeleft = timeStartExp - millis();
   if (timeleft > 0) {
     timertext.html(Math.round(timeleft/1000));
-    setTimeout(waitToStart, 100)
+    setTimeout(waitToStartScript, 100)
   } else {
     advanceInterface();
   }
 }
 
-function loadStoryFile(url) {
-  story = loadJSON(url);
+function parseShowData() {
+  story = jsoncontents["story"];
+  showtimes = jsoncontents["showtimes"];
+  // console.log(story);
+  // console.log(showtimes);
+  // console.log(new Date("Fri, 26 Sep 2014 18:30:00 GMT"));
+  let shows = [
+    new Date(2023, 3, 27, 16, 30),
+    new Date(2023, 3, 27, 17, 30),
+    new Date(2023, 3, 27, 18, 30),
+  ];
+  let nextshow = nearestDate(shows);
+  console.log("next show starts: "+shows[nextshow]);
+}
+
+
+// from https://gist.github.com/miguelmota/28cd8999e8260900140273b0aaa57513
+function nearestDate (dates, target) {
+  if (!target) {
+    target = Date.now()
+  } else if (target instanceof Date) {
+    target = target.getTime()
+  }
+
+  let nearest = Infinity
+  let winner = -1
+
+  dates.forEach(function (date, index) {
+    if (date instanceof Date) {
+      date = date.getTime()
+    }
+    let distance = Math.abs(date - target)
+    if (distance < nearest) {
+      nearest = distance
+      winner = index
+    }
+  })
+
+  return winner
 }
