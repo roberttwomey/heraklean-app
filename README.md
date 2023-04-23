@@ -19,7 +19,7 @@ sudo apt-get install nodejs npm
 
 install modules: 
 
-```npm install dotenv openai socket.io http-server```
+```npm install dotenv openai socket.io http-server pm2```
 
 # Usage
 
