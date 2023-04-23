@@ -18,7 +18,6 @@ let thisState;
 
 // user variables
 
-
 // screen 0
 let vid;
 
@@ -83,16 +82,6 @@ function setup() {
   // table.addColumn("value");
   // NOT USED
 
-  // nextbtn button
-  nextbtn = createButton("start");
-  nextbtn.parent("contents");
-  // nextbtn.style("font-size", "24pt");
-  nextbtn.size(120, 40);
-  // nextbtn.style("top", "400px");
-  nextbtn.style("top", "50vh");
-  nextbtn.style("margin", "0 auto");
-  nextbtn.mousePressed(advanceInterface);
-
   // screen 0
   createSplashScreen();
   
@@ -152,25 +141,17 @@ function renderInterface() {
     nextbtn.html("start");
     nextbtn.show();
   } else if (thisState == "character") {
-    // vid.hide(); // hides the html video
     nextbtn.show();
     nextbtn.html('next');
     chartext.show();
     charsel.show();
   } else if (thisState == "preferences") {
-    // chartext.hide();
-    // charsel.hide();
     nextbtn.show();
     advtext.show();
     advslider.show();
     soctext.show();
     socslider.show();
-  } else if (thisState == "mictest") {
-    // advtext.hide();
-    // advslider.hide();
-    // soctext.hide();
-    // socslider.hide();
-    
+  } else if (thisState == "mictest") {    
     nextbtn.show();
     audiotext.show();
     recbtn.show();
@@ -180,13 +161,6 @@ function renderInterface() {
     audiotext.html(story["mictest"].text);
     doMicTest();
   } else if (thisState == "waiting") {
-    // WAITING
-    // audiotext.hide();
-    // recbtn.hide();
-    // speechoutput.hide();
-
-    // nextbtn.hide();
-
     waittext.html(story["waiting"].text)
     waittext.show();
 
@@ -196,37 +170,26 @@ function renderInterface() {
     timeStartExp = millis() + waittime;
     waitToStart();
 
-  } else if (thisState == "start") {
-    // should just make a hideAll() function
-    // timertext.hide();  
-    // waittext.hide();
+  // } else if (thisState == "start") {
+  //   // should just make a hideAll() function
+  //   // timertext.hide();  
+  //   // waittext.hide();
 
-    // show rec button and speech output
-    audiotext.show();
-    audiotext.html(charsel.value());
-    audiotext.style("top", "45vh");
-    recbtn.show();
-    recbtn.style("top", "50vh");
-    speechoutput.show();
-    doStart();
+  //   // show rec button and speech output
+  //   audiotext.show();
+  //   audiotext.html(charsel.value());
+  //   audiotext.style("top", "45vh");
+  //   recbtn.show();
+  //   recbtn.style("top", "50vh");
+  //   speechoutput.show();
+  //   doStart();
   } else if (thisState == "radio") {  
-    timertext.hide();  
-    waittext.hide();
 
     showRadio();
-    nextbtn.hide();
     radiotext.show();
     let startthis = sample([changeoma, changelax, changelnk, changemm]);
     startthis();
-  } else if (story[thisState].type == "audio") {
-    hideAll();
-
-    // // just starting walk
-    // if (thisState == "ext1") {
-    //   timertext.hide();  
-    //   waittext.hide();
-    // }
-
+  } else if (story[thisState].type == "audio") {    
     chartext.show()
     chartext.html(charsel.value());
 
@@ -248,28 +211,6 @@ function renderInterface() {
     audioFile.onended(listenAndAdvance)
   }
 }
-
-function hideAll() {
-  nextbtn.hide();
-
-  vid.hide();
-  
-  chartext.hide();
-  charsel.hide();
-
-  advtext.hide();
-  advslider.hide();
-  soctext.hide();
-  socslider.hide();
-
-  audiotext.hide();
-  recbtn.hide();
-  speechoutput.hide();
-  
-  timertext.hide();  
-  waittext.hide();
-}
-
 
 function listenAndAdvance() {
     console.log(`file has finished playing`);
@@ -293,137 +234,6 @@ function waitToStart() {
   } else {
     advanceInterface();
   }
-}
-
-function createSplashScreen() {
-  // vid.show();
-}
-
-function createCharSelector() {
-    // character text
-  chartext = createP("select your character:");
-  chartext.parent("contents");
-  // chartext.style("font-size", "24pt");
-  chartext.style("top", "80px");
-  
-  // character selector
-  charsel = createSelect();
-  // charsel.position(50, 180);
-  charsel.option("")
-  for (thischar in characters) {
-    charsel.option(characters[thischar]);
-  }
-  charsel.selected("");
-  charsel.changed(mySelectEvent);
-  // charsel.style("font-size", "24pt");
-  charsel.style("top", "120px");
-  charsel.style("margin", "0 auto");
-  charsel.parent("contents");
-  
-  chartext.hide();
-  charsel.hide();
-}
-
-function createMicCheck() {
-  // audio text
-  audiotext = createP("Test your microphone. Exit when done.");
-  audiotext.parent("contents");
-  // audiotext.style("font-size", "24pt");
-  audiotext.style("top", "100px");
-  audiotext.hide();
-
-  // record button
-  recbtn = createButton("rec");
-  recbtn.parent("contents");
-  // recbtn.style("font-size", "24pt");
-  recbtn.size(120, 40);
-  // recbtn.style("top", "10px");
-  recbtn.style("margin", "0 auto");
-  recbtn.mousePressed(toggleListening);
-  recbtn.hide();
-
-  // audio text
-  speechoutput = createP("(speak now)");
-  speechoutput.parent("contents");
-  speechoutput.id("speech");
-  // audiotext.style("font-size", "24pt");
-  speechoutput.style("top", "140px");
-  speechoutput.style("color", "gray");
-  speechoutput.hide();  
-}
-
-function createSliders() {
-  // title
-  advtext = createP("adventure");
-  advtext.parent("contents");
-  // advtext.style("font-size", "24pt");
-  advtext.style("top", "100px");
-  advtext.hide();
-
-  // adventure slider
-  advslider = createSlider(-5, 5, 0);
-  advslider.style("width", "90%");
-  advslider.style("max-width", "400px");
-  advslider.style("top", "120px");
-  advslider.style("margin", "0 auto");
-  advslider.parent("contents");
-  advslider.input(updateAdv);
-  advslider.hide();
-  
-  // sociability
-  soctext = createP("sociability");
-  soctext.style("font-size", "24pt");
-  soctext.parent("contents");
-  soctext.style("top", "100px");
-  soctext.hide();
-  
-  // sociability slider
-  socslider = createSlider(-5, 5, 0);
-  socslider.style("width", "90%");
-  socslider.style("max-width", "400px");
-  socslider.style("top", "120px");
-  socslider.style("margin", "0 auto");
-  socslider.parent("contents");
-  socslider.input(updateSoc);
-  socslider.hide();
-}
-
-function createWaiting() {
-  timertext = createP(Math.round(waittime/1000))
-  timertext.parent("countdown");
-  timertext.style("position", "relative");
-  timertext.style("font-size", "384pt");
-  timertext.style("color", "#f0f0f0");
-  timertext.style("top", "50vh");
-  timertext.style("margin", "0 auto");
-  timertext.style("line-height", "90px");
-  timertext.hide();
-
-  waittext = createP(story["waiting"].text);
-  waittext.style("position", "relative");
-  waittext.parent("contents");
-  waittext.style("top", "50vh");
-  waittext.style("line-height", "24px");
-  waittext.hide();
-}
-
-function updateSoc() {
-  // let thisTime = millis() - startTime;
-  let thisValue = socslider.value();
-
-  // data.push([thisTime, thisValue]);
-  console.log("sociability: ", thisValue);
-  // console.log("sociability: ", thisTime, thisValue);
-}
-
-function updateAdv()
-{ 
-  // let thisTime = millis() - startTime;
-  let thisValue = advslider.value();
-
-  // data.push([thisTime, thisValue]);
-  console.log("adventure: ", thisValue);
-  // console.log("sociability: ", thisTime, thisValue);
 }
 
 function loadStoryFile(url) {

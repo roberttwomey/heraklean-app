@@ -15,7 +15,7 @@
         "keywords": [""]
     },
     "mictest": {
-      "text": "Test your microphone.\nSay done when complete.",
+      "text": "Test your microphone. Say done when complete.",
       "next": ["waiting"],
       "keywords": ["mike", "check", "test"]
     },

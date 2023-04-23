@@ -42,7 +42,7 @@ speechRec.onresult = (event) => {
   if (event.results[0].isFinal == true) {
     // final result: add to html
     // let newHtml = lastHtml + `<p> ${said} </p>`;
-    let newHtml = lastHtml + "<p>" + said + "</p>";
+    // let newHtml = lastHtml + "<p>" + said + "</p>";
     speechoutput.innerHTML = said;
     speechoutput.style.color = 'black';
     
@@ -57,12 +57,14 @@ speechRec.onresult = (event) => {
     
     // advance and liston
     bNewStep = true;
-    lastHtml = speechoutput.innerHTML;
+    // lastHtml = speechoutput.innerHTML;
   } else {
     // temp result: display in light gray
-    let tempspeechoutput = lastHtml + "<p style='color: gray'>" + said + "</p>";
+    // let tempspeechoutput = lastHtml + "<p style='color: gray'>" + said + "</p>";
     // speechoutput.html(tempspeechoutput);
-    speechoutput.innerHTML = tempspeechoutput;
+    // speechoutput.innerHTML = tempspeechoutput;
+    speechoutput.innerHTML = said;
+    speechoutput.style.color = "gray";
   }
 };
 
@@ -75,7 +77,6 @@ function processSpeech(said) {
   if (story[thisState].type == "question") {
     console.log("to "+thisState+": "+said);
     stopListening();
-    speechoutput.show();
     setTimeout(advanceInterface, 5000);
     // advanceInterface();
     return;
@@ -105,11 +106,12 @@ function processSpeech(said) {
   sayAndListen(story[thisState].text);
 }
 
-function doStart() {
-  console.log("starting");
-  bNewStep = true;
-  sayAndListen(story[thisState].text);
-}
+// NO LONGER NEEDED saturday april 22
+// function doStart() {
+//   console.log("starting");
+//   bNewStep = true;
+//   sayAndListen(story[thisState].text);
+// }
 
 function doMicTest() {
   console.log("doing mic test");
@@ -163,7 +165,7 @@ function stopListening() {
   speechRec.stop();
   bListening = false;
   recbtn.style('background-color', '#f0f0f0');
-  speechoutput.hide();  
+  // speechoutput.hide();  
 }
 
 function toggleListening() {
