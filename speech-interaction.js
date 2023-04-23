@@ -72,26 +72,34 @@ const speechSynth = window.speechSynthesis;
 function processSpeech(said) {
   // said contains the string that was heard
   console.log(thisState, said)
-  for(idx in story[thisState].next) {
-    // loop over next possibilities for this storypoint
-    let nextidx = story[thisState].next[idx];
-    for (keyidx in story[nextidx].keywords) {
-      // check all the keyphrases for this storypoint
-      let phrase = story[nextidx].keywords[keyidx];
-      if(said.includes(phrase)) {
-        // we found the next step to move to
-        thisState=nextidx;
-        bNewStep=true;
-        if(phrase=="done") {
-          // sayAndStartRadio(story["waiting"].text);
-          stopListening();
-          advanceInterface();
-          return;
+  if (story[thisState].type == "question") {
+    console.log("to "+thisState+": "+said);
+    stopListening();
+    speechoutput.show();
+    setTimeout(advanceInterface, 5000);
+    // advanceInterface();
+    return;
+  } else {
+    for(idx in story[thisState].next) {
+      // loop over next possibilities for this storypoint
+      let nextidx = story[thisState].next[idx];
+      for (keyidx in story[nextidx].keywords) {
+        // check all the keyphrases for this storypoint
+        let phrase = story[nextidx].keywords[keyidx];
+        if(said.includes(phrase)) {
+          // we found the next step to move to
+          thisState=nextidx;
+          bNewStep=true;
+          if(phrase=="done") {
+            // sayAndStartRadio(story["waiting"].text);
+            stopListening();
+            advanceInterface();
+            return;
+          }
         }
       }
     }
-  }
-  
+  }  
   // sayAndListen("I heard " + said);
   // sayAndListen(story[thisState].text);
   sayAndListen(story[thisState].text);
@@ -122,6 +130,13 @@ function sayAndListen(thistext) {
     // toggleRecButton();
 
     recbtn.style('background-color', 'red');
+    speechoutput.html("(speak now)");
+    speechoutput.style("color", "gray");
+
+    // speechRec.addEventListener('end', speechRec.start(false, true));
+    // speechRec.start(false, true);
+    // speechRec.addEventListener('end', () => speechRec.start(false, true)); 
+    speechRec.addEventListener('end', () => stopListening()); 
     speechRec.start(false, true);
   };
   
@@ -147,6 +162,18 @@ function sayAndStartRadio(thistext) {
 function stopListening() {
   speechRec.stop();
   bListening = false;
-  recbtn.style('background-color', '#f0f0f0');  
+  recbtn.style('background-color', '#f0f0f0');
+  speechoutput.hide();  
 }
 
+function toggleListening() {
+  if (bListening==true) {
+    speechSynth.cancel();
+    stopListening();
+  } else {
+    bListening = true;
+    recbtn.style('background-color', 'red');
+    speechoutput.show();
+    speechRec.start(false, true);
+  }
+}

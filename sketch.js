@@ -16,6 +16,9 @@
 let nextbtn;
 let thisState;
 
+// user variables
+
+
 // screen 0
 let vid;
 
@@ -56,6 +59,10 @@ let bListening = false;
 // screen 4
 let waittext, timertext;
 let timeStartExp;
+let waittime = 5*1000;
+
+// soundfiles
+let currSound;
 
 function preload() {
   // vid = createImg("clouds2.gif", "video of clouds", "anonymous", );
@@ -98,8 +105,12 @@ function setup() {
   // screen 3
   createMicCheck();
   
-  // sreen 4
+  // screen 4
+  createWaiting();
+
+  // screen 5
   setupRadio();
+  
 
   // startTime = millis();
   thisState = "splash"
@@ -117,7 +128,11 @@ function advanceInterface() {
   //   screennum = 0;
   //   nextbtn.html('enter');
   // }
-  
+
+  // if we have not selected a character
+  if (thisState == "character" && charsel.value() == "") {
+    charsel.selected(sample(characters));
+  }
   stopListening();
   speechSynth.cancel();
   
@@ -129,59 +144,53 @@ function advanceInterface() {
 }
 
 function renderInterface() {
+  hideAll();
 
   // display appropriate interface
   if (thisState == "splash") {
     vid.show(); // shows the html video
+    nextbtn.html("start");
+    nextbtn.show();
   } else if (thisState == "character") {
-    vid.hide(); // hides the html video
+    // vid.hide(); // hides the html video
+    nextbtn.show();
     nextbtn.html('next');
     chartext.show();
     charsel.show();
   } else if (thisState == "preferences") {
-    chartext.hide();
-    charsel.hide();
-    
+    // chartext.hide();
+    // charsel.hide();
+    nextbtn.show();
     advtext.show();
     advslider.show();
     soctext.show();
     socslider.show();
   } else if (thisState == "mictest") {
-    advtext.hide();
-    advslider.hide();
-    soctext.hide();
-    socslider.hide();
-
+    // advtext.hide();
+    // advslider.hide();
+    // soctext.hide();
+    // socslider.hide();
+    
+    nextbtn.show();
     audiotext.show();
     recbtn.show();
     speechoutput.show();
-    // toggleRecButton();
+    speechoutput.html("");
+
     audiotext.html(story["mictest"].text);
     doMicTest();
-
   } else if (thisState == "waiting") {
     // WAITING
-    audiotext.hide();
-    recbtn.hide();
-    speechoutput.hide();
+    // audiotext.hide();
+    // recbtn.hide();
+    // speechoutput.hide();
 
-    nextbtn.hide();
+    // nextbtn.hide();
 
-    waittext = createP(story["waiting"].text);
-    waittext.style("position", "relative");
-    waittext.parent("contents");
-    waittext.style("top", "50vh");
-    waittext.style("line-height", "24px");
+    waittext.html(story["waiting"].text)
+    waittext.show();
 
-    let waittime = 25*1000;
-    timertext = createP(Math.round(waittime/1000))
-    timertext.parent("countdown");
-    timertext.style("position", "relative");
-    timertext.style("font-size", "384pt");
-    timertext.style("color", "#f0f0f0");
-    timertext.style("top", "50vh");
-    timertext.style("margin", "0 auto");
-    timertext.style("line-height", "90px");
+    // TODO fix this formatting code. really ugly.
     timertext.show();
 
     timeStartExp = millis() + waittime;
@@ -189,8 +198,8 @@ function renderInterface() {
 
   } else if (thisState == "start") {
     // should just make a hideAll() function
-    timertext.hide();  
-    waittext.hide();
+    // timertext.hide();  
+    // waittext.hide();
 
     // show rec button and speech output
     audiotext.show();
@@ -209,7 +218,67 @@ function renderInterface() {
     radiotext.show();
     let startthis = sample([changeoma, changelax, changelnk, changemm]);
     startthis();
+  } else if (story[thisState].type == "audio") {
+    hideAll();
+
+    // // just starting walk
+    // if (thisState == "ext1") {
+    //   timertext.hide();  
+    //   waittext.hide();
+    // }
+
+    chartext.show()
+    chartext.html(charsel.value());
+
+    audioFile = createAudio(story[thisState].audio);
+    audioFile.autoplay(true);
+    audioFile.onended(advanceInterface);
+    // garbage collection of file that just stopped
+  } else if (story[thisState].type == "question") {
+    hideAll();
+    chartext.show()
+    chartext.html(charsel.value());
+    recbtn.show();
+    speechoutput.html("")
+    speechoutput.show();
+
+    // playAndListen
+    audioFile = createAudio(story[thisState].audio);
+    audioFile.autoplay(true);
+    audioFile.onended(listenAndAdvance)
   }
+}
+
+function hideAll() {
+  nextbtn.hide();
+
+  vid.hide();
+  
+  chartext.hide();
+  charsel.hide();
+
+  advtext.hide();
+  advslider.hide();
+  soctext.hide();
+  socslider.hide();
+
+  audiotext.hide();
+  recbtn.hide();
+  speechoutput.hide();
+  
+  timertext.hide();  
+  waittext.hide();
+}
+
+
+function listenAndAdvance() {
+    console.log(`file has finished playing`);
+
+    console.log("... now listening ...");
+    recbtn.style('background-color', 'red');
+    speechoutput.html("(speak now)");
+    speechoutput.style("color", "gray");
+    speechRec.start(false, true);
 }
 
 function sample(array) {
@@ -270,7 +339,7 @@ function createMicCheck() {
   recbtn.size(120, 40);
   // recbtn.style("top", "10px");
   recbtn.style("margin", "0 auto");
-  recbtn.mousePressed(stopListening);
+  recbtn.mousePressed(toggleListening);
   recbtn.hide();
 
   // audio text
@@ -317,6 +386,25 @@ function createSliders() {
   socslider.parent("contents");
   socslider.input(updateSoc);
   socslider.hide();
+}
+
+function createWaiting() {
+  timertext = createP(Math.round(waittime/1000))
+  timertext.parent("countdown");
+  timertext.style("position", "relative");
+  timertext.style("font-size", "384pt");
+  timertext.style("color", "#f0f0f0");
+  timertext.style("top", "50vh");
+  timertext.style("margin", "0 auto");
+  timertext.style("line-height", "90px");
+  timertext.hide();
+
+  waittext = createP(story["waiting"].text);
+  waittext.style("position", "relative");
+  waittext.parent("contents");
+  waittext.style("top", "50vh");
+  waittext.style("line-height", "24px");
+  waittext.hide();
 }
 
 function updateSoc() {
