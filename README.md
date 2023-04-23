@@ -24,7 +24,7 @@ install modules:
 # Usage
 
 Run the server
-```node server.js```
+```sudo node heraklean-server.js```
 
 ## Better usage
 
@@ -36,17 +36,17 @@ with pm2
 
 Start the app:
 ```
-pm2 start server.js
+sudo pm2 start heraklean-server.js
 ```
 
 Inspect the log:
 ```
-pm2 log server.js
+sudo pm2 log heraklean-server.js
 ```
 
 Stop the writing tool:
 ```
-pm2 stop server.js
+sudo pm2 stop heraklean-server.js
 ```
 
 
