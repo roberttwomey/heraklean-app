@@ -165,7 +165,7 @@ function stopListening() {
   speechRec.stop();
   bListening = false;
   recbtn.style('background-color', '#f0f0f0');
-  // speechoutput.hide();  
+  speechoutput.hide();  
 }
 
 function toggleListening() {
