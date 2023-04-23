@@ -5,7 +5,7 @@ interactive sound-walk app
 
 ## npm Setup
 
-```npm install dotenv openai socket.io```
+```npm install dotenv openai socket.io http-server```
 
 ## Usage
 
