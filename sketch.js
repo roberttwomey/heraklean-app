@@ -69,6 +69,9 @@ let waittime = 5*1000;
 
 // soundfiles
 let currSound;
+let audioFiles = {};
+
+
 
 function preload() {
   // vid = createImg("clouds2.gif", "video of clouds", "anonymous", );
@@ -98,7 +101,7 @@ function setup() {
   }
   console.log("---", uid);
 
-  console.log(story);
+  // console.log(story);
   // screen 0
   createSplashScreen();
   
@@ -129,6 +132,8 @@ function charSelectEvent() {
 }
 
 function advanceInterface() {
+  if (thisState == "splash") loadAudioFiles();
+  
   // if we have not selected a character
   if (thisState == "character" && charsel.value() == "") {
     // select one randomly
@@ -192,9 +197,11 @@ function renderInterface() {
     chartext.show()
     chartext.html(charsel.value());
 
-    audioFile = createAudio(story[thisState].audio);
-    audioFile.autoplay(true);
-    audioFile.onended(advanceInterface);
+    // audioFile = createAudio(story[thisState].audio);
+    // audioFile.autoplay(true);
+    // audioFile.onended(advanceInterface);
+    audioFiles[thisState].play();
+    audioFiles[thisState].onended(advanceInterface)
     // garbage collection of file that just stopped
   } else if (story[thisState].type == "question") {
     chartext.show()
@@ -204,9 +211,9 @@ function renderInterface() {
     speechoutput.show();
 
     // playAndListen
-    audioFile = createAudio(story[thisState].audio);
-    audioFile.autoplay(true);
-    audioFile.onended(listenAndAdvance)
+    // audioFile = createAudio(story[thisState].audio);
+    audioFiles[thisState].play();
+    audioFiles[thisState].onended(listenAndAdvance)
   }
 }
 
@@ -248,8 +255,21 @@ function parseShowData() {
   ];
   let nextshow = nearestDate(shows);
   console.log("next show starts: "+shows[nextshow]);
+
 }
 
+function loadAudioFiles() {
+  // load audio files
+  for(idx in story) {
+    // loop over next possibilities for this storypoint
+    let thisNode = story[idx];
+    if ((thisNode.type == "audio") || (thisNode.type == "question")) {
+      audioFiles[idx] = createAudio(thisNode.audio);
+      console.log("loaded ", thisNode.audio);
+    }
+    // audioFile = createAudio(story[thisState].audio);
+  }
+}
 
 // from https://gist.github.com/miguelmota/28cd8999e8260900140273b0aaa57513
 function nearestDate (dates, target) {
