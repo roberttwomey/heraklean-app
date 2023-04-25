@@ -42,8 +42,8 @@ let hidePoint = true;
 
 // rady shell
 let options = {
-  lat: 32.703427,
-  lng: -117.163773,
+  lat: 32.703993,
+  lng: -117.163292,
   zoom: 20.0,
   style: 'http://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
 }
@@ -99,7 +99,7 @@ function setupMap() {
   // locDiv = select("#locations");
   getLocation();
 
-  inputDiv= select("#inputs");
+  inputDiv= select("#simulate");
   checkbox = createCheckbox('simulate', false);
   checkbox.changed(toggleSimulate);
   inputDiv.child(checkbox);
@@ -330,7 +330,7 @@ function parseLocations() {
   let j = 1;
   for (node in story) {
     if ("lat" in story[node]) {
-      console.log("location node: ", node);
+      // console.log("location node: ", node);
       locations[j] = {
         "lat": story[node].lat,
         "lng": story[node].lng,

@@ -156,21 +156,6 @@ function doListen() {
   speechRec.addEventListener('end', () => stopListening()); 
   speechRec.start(false, true);
 }
-// function sayAndStartRadio(thistext) {
-//   const utterThis = new SpeechSynthesisUtterance(thistext);
-//   utterThis.onend = (event) => {
-//     console.log(
-//       `Utterance has finished being spoken after ${event.elapsedTime} seconds.`
-//     );
-//     // recbtn.style('background-color', 'red');
-//     // speechRec.start(false, true);
-//     changeoma();  
-//   };
-
-//   stopListening();
-//   advanceInterface();
-//   speechSynth.speak(utterThis);
-// }
 
 function stopListening() {
   speechRec.stop();
