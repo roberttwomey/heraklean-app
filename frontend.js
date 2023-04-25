@@ -64,53 +64,64 @@ function createMicCheck() {
   speechoutput.hide();  
 }
 
+
+// PREFERENCES SCREEN 
+
+let prefs = [
+  "adventure",
+  "sociability",
+  "risk",
+  "pleasure",
+  "humor",
+  "optimism",
+  "wellbeing",
+  "achievement"
+]
+
+let prefText = {};
+let prefSliders = {};
+
 function createSliders() {
-  // title
-  advtext = createP("adventure");
-  advtext.parent("contents");
-  advtext.style("top", "100px");
-  advtext.hide();
 
-  // adventure slider
-  advslider = createSlider(-5, 5, 0);
-  advslider.style("width", "90%");
-  advslider.style("max-width", "400px");
-  advslider.style("top", "120px");
-  advslider.style("margin", "0 auto");
-  advslider.parent("contents");
-  advslider.input(updateAdv);
-  advslider.hide();
+  for (i in prefs) {
+    // title text
+    let pref = prefs[i];
+    prefText[pref] = createP(pref);
+    prefText[pref].parent("contents");
+    prefText[pref].style("top", "100px");
+    prefText[pref].hide();
 
-  let myval = getItem('adventure');
-  if (myval === null) {
-    advslider.value(0);
-   } else {
-    advslider.value(myval);
-   }
+    // slider element
+    prefSliders[pref] = createSlider(-5, 5, 0);
+    prefSliders[pref].parent("contents");
+    prefSliders[pref].style("top", "120px");
+    prefSliders[pref].input(() => updateSlider(pref));
+    prefSliders[pref].hide();
 
-  
-  // sociability
-  soctext = createP("sociability");
-  soctext.parent("contents");
-  soctext.style("top", "100px");
-  soctext.hide();
-  
-  // sociability slider
-  socslider = createSlider(-5, 5, 0);
-  socslider.style("width", "90%");
-  socslider.style("max-width", "400px");
-  socslider.style("top", "120px");
-  socslider.style("margin", "0 auto");
-  socslider.parent("contents");
-  socslider.input(updateSoc);
-  socslider.hide();
+    // check cached value
+    let myval = getItem(pref);
+    if (myval === null) {
+      prefSliders[pref].value(0);
+     } else {
+      prefSliders[pref].value(myval);
+     }
+  }
+}
 
-  myval = getItem('sociability');
-  if (myval === null) {
-    socslider.value(0);
-   } else {
-    socslider.value(myval);
-   }
+function updateSlider(name) {
+  let thisValue = prefSliders[name].value();
+
+  // data.push([thisTime, thisValue]);
+  console.log(name, ": ", thisValue);
+  storeItem(name, thisValue);
+}
+
+function showPreferences() {
+  for (i in prefs) {
+    let pref = prefs[i];
+    prefText[pref].show();
+    prefSliders[pref].show();
+  }
 }
 
 function createWaiting() {
@@ -132,23 +143,6 @@ function createWaiting() {
   waittext.hide();
 }
 
-function updateSoc() {
-  let thisValue = socslider.value();
-
-  // data.push([thisTime, thisValue]);
-  console.log("sociability: ", thisValue);
-  storeItem("sociability", thisValue);
-}
-
-function updateAdv()
-{ 
-  let thisValue = advslider.value();
-
-  // data.push([thisTime, thisValue]);
-  console.log("adventure: ", thisValue);
-  storeItem("adventure", thisValue);
-}
-
 function hideAll() {
   nextbtn.hide();
 
@@ -157,10 +151,15 @@ function hideAll() {
   chartext.hide();
   charsel.hide();
 
-  advtext.hide();
-  advslider.hide();
-  soctext.hide();
-  socslider.hide();
+  // advtext.hide();
+  // advslider.hide();
+  // soctext.hide();
+  // socslider.hide();
+  for (i in prefs) {
+    let pref = prefs[i];
+    prefText[pref].hide();
+    prefSliders[pref].hide();
+  }
 
   audiotext.hide();
   recbtn.hide();
@@ -168,4 +167,6 @@ function hideAll() {
   
   timertext.hide();  
   waittext.hide();
+
+  
 }

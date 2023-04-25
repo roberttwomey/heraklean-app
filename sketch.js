@@ -122,6 +122,8 @@ function setup() {
   
   // startTime = millis();
   thisState = "splash"
+
+  setupMap();
 }
 
 function charSelectEvent() {
@@ -160,7 +162,6 @@ function renderInterface() {
     vid.show();
     nextbtn.html("start");
     nextbtn.show();
-    
   } else if (thisState == "character") {
     nextbtn.show();
     nextbtn.html('next');
@@ -169,10 +170,11 @@ function renderInterface() {
 
   } else if (thisState == "preferences") {
     nextbtn.show();
-    advtext.show();
-    advslider.show();
-    soctext.show();
-    socslider.show();
+    // advtext.show();
+    // advslider.show();
+    // soctext.show();
+    // socslider.show();
+    showPreferences();
 
   } else if (thisState == "mictest") {    
     nextbtn.show();
@@ -206,6 +208,8 @@ function renderInterface() {
     // play and advance
     audioFiles[thisState].play();
     audioFiles[thisState].onended(advanceInterface)
+
+    if (thisState == "onboarding") canvas.show();
   } else if (story[thisState].type == "question") {
     chartext.show()
     chartext.html(charsel.value());
@@ -258,6 +262,8 @@ function parseShowData() {
   let nextshow = nearestDate(shows);
   console.log("next show starts: "+shows[nextshow]);
 
+  // load minimap
+  parseLocations();
 }
 
 function loadAudioFiles() {

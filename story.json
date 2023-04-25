@@ -23,7 +23,7 @@
         },
         "waiting": {
             "text": "Waiting for the experience to begin",
-            "next": ["q1"],
+            "next": ["onboarding"],
             "keywords": ["done"]
         },
         "finish": {
@@ -37,19 +37,75 @@
             "next": [],
             "keywords": ["radio"]
         },
-        "ext1": {
+        "onboarding": {
             "type": "audio",
             "audio": "assets/ext1.mp3",
-            "lat": 32.70384481755841,
-            "lng": -117.16384649276735,
-            "next": ["q1"]
-        },
-        "q1": {
-            "type": "question",
-            "audio": "assets/q1.mp3",
-            "lat": 32.70384481755841,
-            "lng": -117.16384649276735,
-            "next": ["splash"]
-        }
+            "lat": 32.70444346073959,
+            "lng": -117.16358440260593,
+            "radius": 15,
+            "next": ["eucalyptus"]
+          },
+          "eucalyptus": {
+            "lat": 32.70428740548589,
+            "lng": -117.16348707675935,
+            "radius": 15,
+            "next": ["resonate"]
+          },
+          "resonate": {
+            "lat": 32.704136938772486,
+            "lng": -117.163408143133,
+            "radius": 15,
+            "label": "resonate",
+            "sounds": ["cranes.m4a"],
+            "next": ["boats"]
+          },
+          "boats": {
+            "lat": 32.704165742420855,
+            "lng": -117.16306047783291,
+            "radius": 15,
+            "sounds": ["cattle_eating.mp3", "cowdrone.m4a"],
+            "next": ["meetaugus", "manure"]
+          },
+          "meetaugus": {
+            "lat": 32.70381386410789,
+            "lng": -117.1627945560613,
+            "radius": 15,
+            "sounds": ["brook.mp3"],
+            "next": ["stableself"]
+          },
+          "manure": { 
+            "lat": 32.70364233121849, 
+            "lng": -117.16295037940655,
+            "radius": 15,
+            "next": ["stableself"]
+          },
+          "refrigeration": { 
+            "lat": 32.703436405162336,
+            "lng": -117.16306584225097,
+            "radius": 15,
+            "next": ["stableself"]
+          },
+          "tendthegrass": { 
+            "lat": 32.703719, 
+            "lng": -117.163135,
+            "next": ["stableself"]
+          },
+          "stableself": { 
+            "lat": 32.703923,
+            "lng": -117.16313,
+            "next": ["finalresonate"]
+          },
+          "finalresonate": { 
+            "lat": 32.703993,
+            "lng": -117.163292,
+            "radius": 15,
+            "next": ["stableswag"]
+          },
+          "stableswag": { 
+            "lat": 32.704192,
+            "lng": -117.163595,
+            "radius": 15,
+            "next": ["radio", "offboarding"]
+          }
     }
 }

@@ -3,6 +3,7 @@
   <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+    <script src="https://unpkg.com/mappa-mundi@0.0.4/dist/mappa.min.js" type="text/javascript"></script>
     <!-- 
       added this to fix p5 sound over http issue: 
       https://stackoverflow.com/questions/67549798/error-from-p5-sound-in-browser-when-it-is-hosted-via-http 
@@ -25,11 +26,14 @@
       <div id="countdown"></div>
       <div id="contents"></div>
       <div id="nextbtn"></div>
+      <div id="mapdiv"><p id="inputs"></p>
+      </div>
     </div>
     
     <script src="sketch.js"></script>
     <script src="radio.js"></script>
     <script src="speech-interaction.js"></script>
     <script src="frontend.js"></script>
+    <script src="locative.js"></script>
   </body>
 </html>

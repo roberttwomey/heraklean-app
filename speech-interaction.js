@@ -113,7 +113,9 @@ function doMicTest() {
   
   bNewStep = true;
   thisState = "mictest";
-  sayAndListen(story[thisState].text);
+  
+  // sayAndListen(story[thisState].text);
+  doListen();
 }
 
 function sayAndListen(thistext) {
@@ -140,6 +142,20 @@ function sayAndListen(thistext) {
   speechSynth.speak(utterThis);
 }
 
+function doListen() {
+  console.log("... now listening ...");
+  // toggleRecButton();
+
+  recbtn.style('background-color', 'red');
+  speechoutput.html("(speak now)");
+  speechoutput.style("color", "gray");
+
+  // speechRec.addEventListener('end', speechRec.start(false, true));
+  // speechRec.start(false, true);
+  // speechRec.addEventListener('end', () => speechRec.start(false, true)); 
+  speechRec.addEventListener('end', () => stopListening()); 
+  speechRec.start(false, true);
+}
 // function sayAndStartRadio(thistext) {
 //   const utterThis = new SpeechSynthesisUtterance(thistext);
 //   utterThis.onend = (event) => {
