@@ -148,27 +148,28 @@ function advanceInterface() {
   speechSynth.cancel();
 
   if (story[thisState].type == "audio" || story[thisState].type == "question") {
+    waitForNextLoc();
+    
     // if we are into audio story, check location
-    let thislatlng = {};
-    if (simulate == false && myposition != undefined) {
-      thislatlng.lat = myposition.coords.latitude;
-      thislatlng.lng = myposition.coords.longitude;
-    } else {
-      thislatlng.lat = simposition.lat;
-      thislatlng.lng = simposition.lng;
-    }
+    // let thislatlng = {};
+    // if (simulate == false && myposition != undefined) {
+    //   thislatlng.lat = myposition.coords.latitude;
+    //   thislatlng.lng = myposition.coords.longitude;
+    // } else {
+    //   thislatlng.lat = simposition.lat;
+    //   thislatlng.lng = simposition.lng;
+    // }
+    // let results = findClosest(thislatlng);
+    // closest = results[0];
+    // closestlabel = locations[closest].label;
+    // dist = results[1];
+    // // console.log(thislatlng, closest, closestlabel, dist);
 
-    let results = findClosest(thislatlng);
-    closest = results[0];
-    closestlabel = locations[closest].label;
-    dist = results[1];
-    // console.log(thislatlng, closest, closestlabel, dist);
-
-    // if we are close to a valid next choice and within distance threshold
-    if (story[thisState].next.includes(closestlabel) && dist < story[closestlabel].radius) {
-      thisState = closestlabel;
-      console.log("--> moved to "+thisState);
-    }
+    // // if we are close to a valid next choice and within distance threshold
+    // if (story[thisState].next.includes(closestlabel) && dist < story[closestlabel].radius) {
+    //   thisState = closestlabel;
+    //   console.log("--> moved to "+thisState);
+    // }
   } else {  
     let nextState = story[thisState].next[0];
     thisState = nextState;
@@ -247,6 +248,32 @@ function renderInterface() {
     audioFiles[thisState].play();
     audioFiles[thisState].onended(listenAndAdvance)
   }
+}
+
+function waitForNextLoc() {
+  
+  let thislatlng = {};
+  if (simulate == false && myposition != undefined) {
+    thislatlng.lat = myposition.coords.latitude;
+    thislatlng.lng = myposition.coords.longitude;
+  } else {
+    thislatlng.lat = simposition.lat;
+    thislatlng.lng = simposition.lng;
+  }
+
+  let results = findClosestInList(thislatlng, story[thisState].next);
+  closestlabel = results[0]
+  // closestlabel = locations[closest].label;
+  dist = results[1];
+  if (closestlabel != undefined && dist < 5000000) {
+    if (dist < story[closestlabel].radius) {
+      thisState = closestlabel;
+      console.log("--> moved to "+thisState);
+      renderInterface();
+    }
+
+  }
+  setTimeout(waitForNextLoc, 500);
 }
 
 function listenAndAdvance() {

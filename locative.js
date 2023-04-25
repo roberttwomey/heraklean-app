@@ -268,7 +268,7 @@ function findClosest(thislatlng) {
   let mindist = 5000000.0; // too large in feet
   let closestKey;
 
-  for (let p in locations) {
+  for (p in locations) {
     // let thisdist = dist(locations[p].lat, locations[p].lng, simposition.lat, simposition.lng);
     let thisdist = latLngDist(
       locations[p].lat,
@@ -279,6 +279,31 @@ function findClosest(thislatlng) {
     if (thisdist < mindist) {
       closestKey = p;
       mindist = thisdist;
+    }
+    // console.log(thislatlng, locations[p]);
+  }
+
+  return [closestKey, mindist];
+}
+
+function findClosestInList(thislatlng, thislist) {
+  let mindist = 5000000.0; // too large in feet
+  let closestKey = undefined;
+  
+  for (p in locations) {
+    // let thisdist = dist(locations[p].lat, locations[p].lng, simposition.lat, simposition.lng);
+    if(thislist.includes(locations[p].label)) {
+      console.log(p, locations[p].label);
+      let thisdist = latLngDist(
+        locations[p].lat,
+        locations[p].lng,
+        thislatlng.lat,
+        thislatlng.lng
+      );
+      if (thisdist < mindist) {
+        closestKey = locations[p].label;
+        mindist = thisdist;
+      }
     }
     // console.log(thislatlng, locations[p]);
   }
