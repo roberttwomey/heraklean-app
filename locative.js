@@ -87,10 +87,10 @@ let options = {
 // }
 
 function setupMap() {
-  // createCanvas(640, 380);
+  canvas = createCanvas(380, 700);
   // canvas = createCanvas(800, 800);
   // canvas = createCanvas(400, 600);
-  canvas = createCanvas(300, 450);
+  // canvas = createCanvas(300, 450);
   canvas.parent("mapdiv");
   // canvas.hide();
 
@@ -163,7 +163,8 @@ function draw() {
       50,
       30
     );
-    text("selected: " + round(simposition.lat, 6) + " " + round(simposition.lng, 6), 50, 50);
+    text("clicked: " + round(simposition.lat, 6) + " " + round(simposition.lng, 6), 50, 50);
+    text("distance: "+round(dist, 2), 50, 70)
   }
 
   for (let p in locations) {
@@ -195,9 +196,11 @@ function toggleSimulate() {
 
 function getLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(success, error, geooptions);
+    // get position and process with callback
+    navigator.geolocation.getCurrentPosition(processGeoloc, showError, geooptions);
   } else {
     console.log("Geolocation is not supported by this browser.");
+    exit();
   }
 }
 
@@ -210,26 +213,44 @@ const geooptions = {
   maximumAge: 0
 };
 
-function success(position) {
+function processGeoloc(position) {
   if (position != undefined) {
     myposition = position;
+    // console.log("processGeoloc() from gelocation.navigator: ", myposition);
     
-    if (simulate == false) {
-      let thislatlng = {};
-      thislatlng.lat = myposition.coords.latitude;
-      thislatlng.lng = myposition.coords.longitude;
+    // if (simulate == false) {
+    //   let thislatlng = {};
+    //   thislatlng.lat = myposition.coords.latitude;
+    //   thislatlng.lng = myposition.coords.longitude;
       
-      let results = findClosest(thislatlng);
-      closest = results[0];
-      dist = results[1];
+    //   let results = findClosest(thislatlng);
+    //   closest = results[0];
+    //   dist = results[1];
       
-      // playClosestAndVol(closest, dist);
-    }
+    //   // playClosestAndVol(closest, dist);
+    // }
   }
 }
 
-function error(err) {
-  console.warn(`ERROR(${err.code}): ${err.message}`);
+// function error(err) {
+//   console.warn(`ERROR(${err.code}): ${err.message}`);
+// }
+
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      console.log("GEOLOC ERROR: User denied the request for Geolocation.");
+      break;
+    case error.POSITION_UNAVAILABLE:
+      console.log("GEOLOC ERROR: Location information is unavailable.");
+      break;
+    case error.TIMEOUT:
+      console.log("GEOLOC ERROR: The request to get user location timed out.");
+      break;
+    case error.UNKNOWN_ERROR:
+      console.log("GEOLOC ERROR: An unknown error occurred.");
+      break;
+  }
 }
 
 function mouseClicked() {
@@ -250,7 +271,7 @@ function updatePosition() {
     closest = results[0];
     dist = results[1];
     
-    console.log("updatePosition(): closest point is ", closest, dist, locations[closest]);
+    // console.log("updatePosition(): closest point is ", closest, dist, locations[closest]);
     // playClosestAndVol(closest, dist);
   }
 }
@@ -345,7 +366,7 @@ function hideBadge() {
   badge.hide();
 }
 
-function parseLocations() {
+function parseStoryLocations() {
   let j = 1;
   for (node in story) {
     if ("lat" in story[node]) {

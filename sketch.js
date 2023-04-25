@@ -150,7 +150,7 @@ function advanceInterface() {
   if (story[thisState].type == "audio" || story[thisState].type == "question") {
     // if we are into audio story, check location
     let thislatlng = {};
-    if (simulate == false) {
+    if (simulate == false && myposition != undefined) {
       thislatlng.lat = myposition.coords.latitude;
       thislatlng.lng = myposition.coords.longitude;
     } else {
@@ -162,7 +162,7 @@ function advanceInterface() {
     closest = results[0];
     closestlabel = locations[closest].label;
     dist = results[1];
-    console.log(thislatlng, closest, closestlabel, dist);
+    // console.log(thislatlng, closest, closestlabel, dist);
 
     // if we are close to a valid next choice and within distance threshold
     if (story[thisState].next.includes(closestlabel) && dist < story[closestlabel].radius) {
@@ -289,7 +289,8 @@ function parseShowData() {
   console.log("next show starts: "+shows[nextshow]);
 
   // load minimap
-  parseLocations();
+  // parseLocations();
+  parseStoryLocations();
 }
 
 function loadAudioFiles() {
