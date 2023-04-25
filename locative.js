@@ -8,12 +8,16 @@
 let simulate = false;
 
 let thismap;
-let latlong;
 let v1;
+
+// this variable stores the current position
 let myposition;
 let lastgeoloc = 0;
 let locinterval = 500; // 0.5 sec;
 
+let simposition; // simulated position when clicking
+
+// this is used for distance calculations
 let closest;
 let dist;
 
@@ -149,7 +153,7 @@ function draw() {
   fill(255, 255, 0);
   circle(mouseX, mouseY, 15);
 
-  if (myposition != undefined && latlong != undefined) {
+  if (myposition != undefined && simposition != undefined) {
     fill(255, 255, 0);
     text(
       "geolocation: " +
@@ -159,7 +163,7 @@ function draw() {
       50,
       30
     );
-    text("selected: " + round(latlong.lat, 6) + " " + round(latlong.lng, 6), 50, 50);
+    text("selected: " + round(simposition.lat, 6) + " " + round(simposition.lng, 6), 50, 50);
   }
 
   for (let p in locations) {
@@ -239,15 +243,15 @@ function updatePosition() {
   // screen location for simulation
   v1.x = mouseX;
   v1.y = mouseY;
-  latlong = myMap.pixelToLatLng(v1.x, v1.y);
+  simposition = myMap.pixelToLatLng(v1.x, v1.y);
   
   if (simulate == true) {
-    let results = findClosest(latlong);
+    let results = findClosest(simposition);
     closest = results[0];
     dist = results[1];
     
-    // console.log("closest point: " + closest + " " + dist);
-    playClosestAndVol(closest, dist);
+    console.log("updatePosition(): closest point is ", closest, dist, locations[closest]);
+    // playClosestAndVol(closest, dist);
   }
 }
 
@@ -289,7 +293,7 @@ function findClosest(thislatlng) {
   let closestKey;
 
   for (let p in locations) {
-    // let thisdist = dist(locations[p].lat, locations[p].lng, latlong.lat, latlong.lng);
+    // let thisdist = dist(locations[p].lat, locations[p].lng, simposition.lat, simposition.lng);
     let thisdist = latLngDist(
       locations[p].lat,
       locations[p].lng,
@@ -300,6 +304,7 @@ function findClosest(thislatlng) {
       closestKey = p;
       mindist = thisdist;
     }
+    // console.log(thislatlng, locations[p]);
   }
 
   return [closestKey, mindist];

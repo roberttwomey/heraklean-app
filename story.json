@@ -39,72 +39,94 @@
         },
         "onboarding": {
             "type": "audio",
-            "audio": "assets/ext1.mp3",
+            "audio": "assets/1.mp3",
             "lat": 32.70444346073959,
             "lng": -117.16358440260593,
-            "radius": 15,
+            "radius": 20,
             "next": ["eucalyptus"]
           },
           "eucalyptus": {
+            "type": "audio",
+            "audio": "assets/2.mp3",
             "lat": 32.70428740548589,
             "lng": -117.16348707675935,
-            "radius": 15,
+            "radius": 20,
             "next": ["resonate"]
           },
           "resonate": {
+            "type": "audio",
+            "audio": "assets/3.mp3",
             "lat": 32.704136938772486,
             "lng": -117.163408143133,
-            "radius": 15,
+            "radius": 20,
             "label": "resonate",
             "sounds": ["cranes.m4a"],
             "next": ["boats"]
           },
           "boats": {
+            "type": "audio",
+            "audio": "assets/4.mp3",
             "lat": 32.704165742420855,
             "lng": -117.16306047783291,
-            "radius": 15,
+            "radius": 20,
             "sounds": ["cattle_eating.mp3", "cowdrone.m4a"],
             "next": ["meetaugus", "manure"]
           },
           "meetaugus": {
+            "type": "audio",
+            "audio": "assets/5.mp3",
             "lat": 32.70381386410789,
             "lng": -117.1627945560613,
-            "radius": 15,
+            "radius": 20,
             "sounds": ["brook.mp3"],
             "next": ["stableself"]
           },
           "manure": { 
+            "type": "audio",
+            "audio": "assets/6.mp3",
             "lat": 32.70364233121849, 
             "lng": -117.16295037940655,
-            "radius": 15,
+            "radius": 20,
             "next": ["stableself"]
           },
-          "refrigeration": { 
+          "refrigeration": {             
+            "type": "audio",
+            "audio": "assets/7.mp3",
             "lat": 32.703436405162336,
             "lng": -117.16306584225097,
-            "radius": 15,
+            "radius": 20,
             "next": ["stableself"]
           },
-          "tendthegrass": { 
+          "tendthegrass": {
+            "type": "audio",
+            "audio": "assets/8.mp3", 
             "lat": 32.703719, 
             "lng": -117.163135,
+            "radius": 20,
             "next": ["stableself"]
           },
           "stableself": { 
+            "type": "audio",
+            "audio": "assets/9.mp3",
             "lat": 32.703923,
             "lng": -117.16313,
+            "radius": 20,
             "next": ["finalresonate"]
           },
-          "finalresonate": { 
+          "finalresonate": {
+            "type": "audio",
+            "audio": "assets/10.mp3", 
             "lat": 32.703993,
             "lng": -117.163292,
-            "radius": 15,
+            "radius": 20,
             "next": ["stableswag"]
           },
-          "stableswag": { 
+          "stableswag": {
+            "type": "audio",
+            "audio": "assets/11.mp3", 
             "lat": 32.704192,
             "lng": -117.163595,
-            "radius": 15,
+            "radius": 20,
             "next": ["radio", "offboarding"]
           }
     }

@@ -14,7 +14,7 @@
 // advance through screens
 // let screennum = 0;
 let nextbtn;
-let thisState;
+let thisState; // current position in story
 
 // user variables
 
@@ -23,7 +23,6 @@ let storyfile = "story.json";
 let jsoncontents;
 let story; // structure for story from JSON
 let showtimes; 
-
 
 // screen 0
 let vid;
@@ -70,7 +69,6 @@ let waittime = 5*1000;
 // soundfiles
 let currSound;
 let audioFiles = {};
-
 
 
 function preload() {
@@ -124,7 +122,6 @@ function setup() {
   setupMap();
 
   thisState = "splash";
-  // thisState = "waiting";
 }
 
 function charSelectEvent() {
@@ -135,7 +132,10 @@ function charSelectEvent() {
 }
 
 function advanceInterface() {
-  if (thisState == "splash") loadAudioFiles();
+  // if (thisState == "splash") loadAudioFiles();
+  if (Object.keys(audioFiles).length <= 0) {
+    loadAudioFiles();
+  }
 
   // if we have not selected a character
   if (thisState == "character" && charsel.value() == "") {
@@ -146,11 +146,34 @@ function advanceInterface() {
   // stop speaking and listening, just in case
   stopListening();
   speechSynth.cancel();
-  
-  let nextState = story[thisState].next[0];
-  thisState = nextState;
-  console.log("--> moved to "+thisState);
 
+  if (story[thisState].type == "audio" || story[thisState].type == "question") {
+    // if we are into audio story, check location
+    let thislatlng = {};
+    if (simulate == false) {
+      thislatlng.lat = myposition.coords.latitude;
+      thislatlng.lng = myposition.coords.longitude;
+    } else {
+      thislatlng.lat = simposition.lat;
+      thislatlng.lng = simposition.lng;
+    }
+
+    let results = findClosest(thislatlng);
+    closest = results[0];
+    closestlabel = locations[closest].label;
+    dist = results[1];
+    console.log(thislatlng, closest, closestlabel, dist);
+
+    // if we are close to a valid next choice and within distance threshold
+    if (story[thisState].next.includes(closestlabel) && dist < story[closestlabel].radius) {
+      thisState = closestlabel;
+      console.log("--> moved to "+thisState);
+    }
+  } else {  
+    let nextState = story[thisState].next[0];
+    thisState = nextState;
+    console.log("--> moved to "+thisState);
+  }
   renderInterface();
 }
 
