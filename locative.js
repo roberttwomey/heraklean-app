@@ -50,7 +50,7 @@ let options = {
   lat: 32.703993,
   lng: -117.163292,
   zoom: 20.0,
-  style: 'http://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+  style: 'https://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
 }
 // let mapfile = "radymap2.json";
 // let mapfile = "map3.json";

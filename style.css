@@ -46,7 +46,7 @@ html, body {
 
 #nextbtn {
   width: 100%;
-  z-index: 7;
+  z-index: 10;
   position: fixed;
   bottom: 10%;
 }
@@ -95,3 +95,4 @@ input[type="range" i] {
 .leaflet-container {
   z-index: 100;
 } */
+
