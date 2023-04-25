@@ -133,7 +133,7 @@ function charSelectEvent() {
 
 function advanceInterface() {
   if (thisState == "splash") loadAudioFiles();
-  
+
   // if we have not selected a character
   if (thisState == "character" && charsel.value() == "") {
     // select one randomly
@@ -160,17 +160,20 @@ function renderInterface() {
     vid.show();
     nextbtn.html("start");
     nextbtn.show();
+    
   } else if (thisState == "character") {
     nextbtn.show();
     nextbtn.html('next');
     chartext.show();
     charsel.show();
+
   } else if (thisState == "preferences") {
     nextbtn.show();
     advtext.show();
     advslider.show();
     soctext.show();
     socslider.show();
+
   } else if (thisState == "mictest") {    
     nextbtn.show();
     audiotext.show();
@@ -180,6 +183,7 @@ function renderInterface() {
 
     audiotext.html(story["mictest"].text);
     doMicTest();
+
   } else if (thisState == "waiting") {
     waittext.html(story["waiting"].text)
     waittext.show();
@@ -188,21 +192,20 @@ function renderInterface() {
     timertext.show();
     timeStartExp = millis() + waittime;
     waitToStartScript();
+
   } else if (thisState == "radio") {  
     showRadio();
     radiotext.show();
     let startRandomStation = sample([changeoma, changelax, changelnk, changemm]);
     startRandomStation();
+
   } else if (story[thisState].type == "audio") {    
     chartext.show()
     chartext.html(charsel.value());
 
-    // audioFile = createAudio(story[thisState].audio);
-    // audioFile.autoplay(true);
-    // audioFile.onended(advanceInterface);
+    // play and advance
     audioFiles[thisState].play();
     audioFiles[thisState].onended(advanceInterface)
-    // garbage collection of file that just stopped
   } else if (story[thisState].type == "question") {
     chartext.show()
     chartext.html(charsel.value());
@@ -210,8 +213,7 @@ function renderInterface() {
     speechoutput.html("")
     speechoutput.show();
 
-    // playAndListen
-    // audioFile = createAudio(story[thisState].audio);
+    // play and listen then advance
     audioFiles[thisState].play();
     audioFiles[thisState].onended(listenAndAdvance)
   }
