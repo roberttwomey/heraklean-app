@@ -46,7 +46,7 @@ html, body {
 
 #nextbtn {
   width: 100%;
-  z-index: 10;
+  z-index: 7;
   position: fixed;
   bottom: 10%;
 }
@@ -86,4 +86,12 @@ input[type="range" i] {
 /* .leaflet-container {z-index:0} */
 /* .leaflet-map-pane canvas {
   z-index: 399;
+} */
+
+/* #mappa {
+  z-index: 100;
+}
+
+.leaflet-container {
+  z-index: 100;
 } */
