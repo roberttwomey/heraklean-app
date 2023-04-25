@@ -42,7 +42,7 @@
             "audio": "assets/1.mp3",
             "lat": 32.70444346073959,
             "lng": -117.16358440260593,
-            "radius": 20,
+            "radius": 40,
             "next": ["eucalyptus"]
           },
           "eucalyptus": {
@@ -50,7 +50,7 @@
             "audio": "assets/2.mp3",
             "lat": 32.70428740548589,
             "lng": -117.16348707675935,
-            "radius": 20,
+            "radius": 40,
             "next": ["resonate"]
           },
           "resonate": {
@@ -58,7 +58,7 @@
             "audio": "assets/3.mp3",
             "lat": 32.704136938772486,
             "lng": -117.163408143133,
-            "radius": 20,
+            "radius": 40,
             "label": "resonate",
             "sounds": ["cranes.m4a"],
             "next": ["boats"]
@@ -68,7 +68,7 @@
             "audio": "assets/4.mp3",
             "lat": 32.704165742420855,
             "lng": -117.16306047783291,
-            "radius": 20,
+            "radius": 40,
             "sounds": ["cattle_eating.mp3", "cowdrone.m4a"],
             "next": ["meetaugus", "manure"]
           },
@@ -77,7 +77,7 @@
             "audio": "assets/5.mp3",
             "lat": 32.70381386410789,
             "lng": -117.1627945560613,
-            "radius": 20,
+            "radius": 40,
             "sounds": ["brook.mp3"],
             "next": ["stableself"]
           },
@@ -86,7 +86,7 @@
             "audio": "assets/6.mp3",
             "lat": 32.70364233121849, 
             "lng": -117.16295037940655,
-            "radius": 20,
+            "radius": 40,
             "next": ["stableself"]
           },
           "refrigeration": {             
@@ -94,7 +94,7 @@
             "audio": "assets/7.mp3",
             "lat": 32.703436405162336,
             "lng": -117.16306584225097,
-            "radius": 20,
+            "radius": 40,
             "next": ["stableself"]
           },
           "tendthegrass": {
@@ -102,7 +102,7 @@
             "audio": "assets/8.mp3", 
             "lat": 32.703719, 
             "lng": -117.163135,
-            "radius": 20,
+            "radius": 40,
             "next": ["stableself"]
           },
           "stableself": { 
@@ -110,7 +110,7 @@
             "audio": "assets/9.mp3",
             "lat": 32.703923,
             "lng": -117.16313,
-            "radius": 20,
+            "radius": 40,
             "next": ["finalresonate"]
           },
           "finalresonate": {
@@ -118,7 +118,7 @@
             "audio": "assets/10.mp3", 
             "lat": 32.703993,
             "lng": -117.163292,
-            "radius": 20,
+            "radius": 40,
             "next": ["stableswag"]
           },
           "stableswag": {
@@ -126,7 +126,7 @@
             "audio": "assets/11.mp3", 
             "lat": 32.704192,
             "lng": -117.163595,
-            "radius": 20,
+            "radius": 40,
             "next": ["radio", "offboarding"]
           }
     }
