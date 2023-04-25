@@ -52,39 +52,6 @@ let options = {
   zoom: 20.0,
   style: 'https://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
 }
-// let mapfile = "radymap2.json";
-// let mapfile = "map3.json";
-
-// robert's house
-// let options = {
-//   lat: 32.782864,
-//   lng: -117.151572,
-//   zoom: 20.0,
-//   style: "http://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
-// };
-// let mapfile = "housemap.json";
-
-// function preload() {
-  // loadMapFile(mapfile);
-// }
-
-// function preloadSounds() {
-//   count = Object.keys(locations).length;
-//   console.log(locations, count);
-
-//   for (let p in locations) {
-//     if (locations[p].sounds != undefined) {
-//       let thesesounds = [];
-//       for (s in locations[p].sounds) {
-//         let thissound = locations[p].sounds[s];
-//         console.log(thissound);
-//         thesesounds.push(loadSound(thissound));
-//       }
-//       sounds[p] = thesesounds;
-//     }
-//   }
-//   console.log(sounds);
-// }
 
 function setupMap() {
   canvas = createCanvas(500, 1000);
@@ -217,19 +184,6 @@ const geooptions = {
 function processGeoloc(position) {
   if (position != undefined) {
     myposition = position;
-    // console.log("processGeoloc() from gelocation.navigator: ", myposition);
-
-    // if (simulate == false) {
-    //   let thislatlng = {};
-    //   thislatlng.lat = myposition.coords.latitude;
-    //   thislatlng.lng = myposition.coords.longitude;
-      
-    //   let results = findClosest(thislatlng);
-    //   closest = results[0];
-    //   dist = results[1];
-      
-    //   // playClosestAndVol(closest, dist);
-    // }
   }
 }
 
