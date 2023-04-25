@@ -120,10 +120,11 @@ function setup() {
   // screen 5
   setupRadio();
   
-  // startTime = millis();
-  thisState = "splash"
-
+  // minimap for debugging
   setupMap();
+
+  thisState = "splash";
+  // thisState = "waiting";
 }
 
 function charSelectEvent() {
@@ -209,7 +210,9 @@ function renderInterface() {
     audioFiles[thisState].play();
     audioFiles[thisState].onended(advanceInterface)
 
-    if (thisState == "onboarding") canvas.show();
+    if (thisState == "onboarding") {
+      showMap();
+    }
   } else if (story[thisState].type == "question") {
     chartext.show()
     chartext.html(charsel.value());

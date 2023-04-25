@@ -19,6 +19,7 @@ let dist;
 
 let myMap;
 let canvas;
+let myMapDiv;
 
 const mappa = new Mappa("Leaflet");
 // let sounds = [];
@@ -84,7 +85,8 @@ let options = {
 function setupMap() {
   // createCanvas(640, 380);
   // canvas = createCanvas(800, 800);
-  canvas = createCanvas(400, 600);
+  // canvas = createCanvas(400, 600);
+  canvas = createCanvas(300, 450);
   canvas.parent("mapdiv");
   // canvas.hide();
 
@@ -107,6 +109,18 @@ function setupMap() {
   textSize(18);
   
   updatePosition();
+
+  hideMap();
+}
+
+function hideMap() {
+  myMapDiv = select("#mapdiv");
+  myMapDiv.hide();
+}
+
+function showMap() {
+  myMapDiv = select("#mapdiv");
+  myMapDiv.show();
 }
 
 function draw() {
@@ -319,7 +333,7 @@ function latLngDist(lat1, lon1, lat2, lon2) {
 // }
 
 function hideBadge() {
-  let myMapDiv = select("#mapdiv");
+  myMapDiv = select("#mapdiv");
   myMapDiv.child(myMap.map.getContainer());
 
   let badge = selectAll(".leaflet-control-attribution")[0];

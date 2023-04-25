@@ -1,10 +1,10 @@
 function createSplashScreen() {
   // vid.show();
   nextbtn = createButton("start");
-  nextbtn.parent("contents");
+  nextbtn.parent("nextbtn");
   nextbtn.size(120, 40);
   // nextbtn.style("top", "400px");
-  nextbtn.style("top", "50vh");
+  // nextbtn.style("top", "50vh");
   nextbtn.style("margin", "0 auto");
   nextbtn.mousePressed(advanceInterface);
 }

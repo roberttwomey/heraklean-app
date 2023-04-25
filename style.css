@@ -24,7 +24,7 @@ html, body {
 #wallpaper,
 #countdown,
 #contents,
-#nextbtn {
+{
   width: 100%;
   height: 100%;
   position: absolute;
@@ -45,7 +45,10 @@ html, body {
 }
 
 #nextbtn {
+  width: 100%;
   z-index: 10;
+  position: fixed;
+  bottom: 10%;
 }
 
 #wallpaper {

@@ -98,7 +98,8 @@ function processSpeech(said) {
   }  
   // sayAndListen("I heard " + said);
   // sayAndListen(story[thisState].text);
-  sayAndListen(story[thisState].text);
+  // sayAndListen(story[thisState].text);
+  doListen();
 }
 
 // NO LONGER NEEDED saturday april 22
