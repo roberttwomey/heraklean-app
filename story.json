@@ -79,7 +79,7 @@
             "lng": -117.1627945560613,
             "radius": 40,
             "sounds": ["brook.mp3"],
-            "next": ["stableself"]
+            "next": ["manure"]
           },
           "manure": { 
             "type": "audio",
@@ -87,7 +87,7 @@
             "lat": 32.70364233121849, 
             "lng": -117.16295037940655,
             "radius": 40,
-            "next": ["stableself"]
+            "next": ["refrigeration"]
           },
           "refrigeration": {             
             "type": "audio",
@@ -95,7 +95,7 @@
             "lat": 32.703436405162336,
             "lng": -117.16306584225097,
             "radius": 40,
-            "next": ["stableself"]
+            "next": ["tendthegrass"]
           },
           "tendthegrass": {
             "type": "audio",
