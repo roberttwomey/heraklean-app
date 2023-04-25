@@ -49,7 +49,7 @@ function createMicCheck() {
   // record button
   recbtn = createButton("rec");
   recbtn.parent("contents");
-  recbtn. ze(120, 40);
+  recbtn.size(120, 40);
   recbtn.style("top", "50vh");
   recbtn.style("margin", "0 auto");
   recbtn.mousePressed(toggleListening);
