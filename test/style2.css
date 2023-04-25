@@ -1,0 +1,15 @@
+html,
+body {
+  margin: 0px;
+  height: 100%;
+}
+
+.box {
+  background: red;
+  /* height: 100%; */
+  position:absolute;
+  top:10px;
+  right:10px;
+  bottom:10px;
+  left:10px;
+}
