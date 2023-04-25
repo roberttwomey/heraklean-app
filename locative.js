@@ -33,7 +33,7 @@ let locations = {};
 // let count = 0;
 // let lastHtml = "";
 let locDiv;
-let checkbox;
+let simulateCheck;
 
 // for adding new points
 let label = "";
@@ -106,9 +106,9 @@ function setupMap() {
   getLocation();
 
   inputDiv= select("#simulate");
-  checkbox = createCheckbox('simulate', false);
-  checkbox.changed(toggleSimulate);
-  inputDiv.child(checkbox);
+  simulateCheck = createCheckbox('simulate', false);
+  simulateCheck.changed(toggleSimulate);
+  inputDiv.child(simulateCheck);
 
   textSize(18);
   
@@ -191,7 +191,7 @@ function draw() {
 }
 
 function toggleSimulate() {
-  simulate = checkbox.checked();  
+  simulate = simulateCheck.checked();  
 }
 
 function getLocation() {
@@ -217,7 +217,7 @@ function processGeoloc(position) {
   if (position != undefined) {
     myposition = position;
     // console.log("processGeoloc() from gelocation.navigator: ", myposition);
-    
+
     // if (simulate == false) {
     //   let thislatlng = {};
     //   thislatlng.lat = myposition.coords.latitude;

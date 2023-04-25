@@ -76,4 +76,14 @@ input[type="range" i] {
   margin: 0 auto;
 }
 
+/* @supports (-webkit-touch-callout: none) {
+  .leaflet-control-container .leaflet-top,
+  .leaflet-control-container .leaflet-bottom {
+    will-change: transform;
+  }
+} */
 
+/* .leaflet-container {z-index:0} */
+/* .leaflet-map-pane canvas {
+  z-index: 399;
+} */
