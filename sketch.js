@@ -17,29 +17,8 @@ let showtimes;
 let vid;
 
 // screen 1
-let charsel, chartext, seltext;
-let characters = [
-  'Clio Jones',
-  'Dion Nguyen',
-  'Hera Ramirez',
-  'Leos Lightning',
-  'Demeter Greenberg',
-  'Misael Maelstrom',
-  'Odysseus Mann',
-  'Iason Schmerz',
-  'Zeus Johnson',
-  'Lily Padilla',
-  'Hydra Wiliams',
-  'Eurydice Chen',
-  'Athena Farmer',
-  'Icarus O’brien',
-  'Aphrodite Sumac',
-  'Orion Tillman',
-  'Reaper Brown',
-  'Ariana Omahan',
-  'Atlas Rodriguez',
-  'Gaia Solange'
-];
+let charsel, seltext;
+let chartext, charbiotext;
 
 // screen 2
 let advslider, advtext;
@@ -242,8 +221,10 @@ function renderInterface() {
     startRandomStation();
 
   } else if (story[thisState].type == "audio") {    
-    chartext.show()
     chartext.html(charsel.value());
+    chartext.show()
+    charbiotext.html(backstories[charsel.value()]);
+    charbiotext.show();
 
     if (story[thisState].next.length > 1) {
       // showOptions();
@@ -408,7 +389,7 @@ function loadAudioFiles() {
     let thisNode = story[idx];
     if ((thisNode.type == "audio") || (thisNode.type == "question")) {
       audioFiles[idx] = createAudio(thisNode.audio);
-      console.log("loaded ", thisNode.audio);
+      console.log("loaded ", thisNode.audio, thisNode.audio.duration);
     }
     // audioFile = createAudio(story[thisState].audio);
   }

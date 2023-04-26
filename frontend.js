@@ -14,6 +14,14 @@ function createCharSelector() {
   chartext = createP("select your character:");
   chartext.parent("contents");
   chartext.style("top", "80px");
+
+  charbiotext = createP("This is your story.");
+  charbiotext.parent("contents");
+  charbiotext.style("top", "120px");
+  charbiotext.style("font-size", "16pt");
+  charbiotext.style("margin-left", "20px");
+  charbiotext.style("margin-right", "20px");
+  charbiotext.hide();
   
   // character selector
   charsel = createSelect();
