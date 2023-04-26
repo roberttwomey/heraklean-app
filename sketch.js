@@ -3,20 +3,9 @@
 
 // weather radio from here: https://editor.p5js.org/robert.twomey/sketches/edH7FDhyw
 
-// LEFTOVERS
-// let title;
-// let start, stop;
-// let startTime, started = false;
-// let timer;
-// let samples;
-// let table;
-
 // advance through screens
-// let screennum = 0;
 let nextbtn;
 let thisState; // current position in story
-
-// user variables
 
 // composition
 let storyfile = "story.json";
@@ -99,6 +88,7 @@ function setup() {
   }
   console.log("---", uid);
 
+  console.log("my last state ", getItem("state"));
   // console.log(story);
   // screen 0
   createSplashScreen();
@@ -132,7 +122,6 @@ function charSelectEvent() {
 }
 
 function advanceInterface() {
-  // if (thisState == "splash") loadAudioFiles();
   if (Object.keys(audioFiles).length <= 0) {
     loadAudioFiles();
   }
@@ -147,32 +136,13 @@ function advanceInterface() {
   stopListening();
   speechSynth.cancel();
 
+  // location based advancement
   if (story[thisState].type == "audio" || story[thisState].type == "question") {
     waitForNextLoc();
-    
-    // if we are into audio story, check location
-    // let thislatlng = {};
-    // if (simulate == false && myposition != undefined) {
-    //   thislatlng.lat = myposition.coords.latitude;
-    //   thislatlng.lng = myposition.coords.longitude;
-    // } else {
-    //   thislatlng.lat = simposition.lat;
-    //   thislatlng.lng = simposition.lng;
-    // }
-    // let results = findClosest(thislatlng);
-    // closest = results[0];
-    // closestlabel = locations[closest].label;
-    // dist = results[1];
-    // // console.log(thislatlng, closest, closestlabel, dist);
-
-    // // if we are close to a valid next choice and within distance threshold
-    // if (story[thisState].next.includes(closestlabel) && dist < story[closestlabel].radius) {
-    //   thisState = closestlabel;
-    //   console.log("--> moved to "+thisState);
-    // }
   } else {  
     let nextState = story[thisState].next[0];
     thisState = nextState;
+    storeItem("state", thisState);
     console.log("--> moved to "+thisState);
   }
   renderInterface();
@@ -217,8 +187,10 @@ function renderInterface() {
 
     // TODO fix this formatting code. really ugly.
     timertext.show();
-    timeStartExp = millis() + waittime;
-    waitToStartScript();
+    timeStartExp = millis() + 5000;
+    fakeWait();
+
+    // waitToStartScript();
 
   } else if (thisState == "radio") {  
     showRadio();
@@ -291,11 +263,28 @@ function sample(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function waitToStartScript() {
-  let timeleft = timeStartExp - millis();
+function fakeWait() {
+  let timeleft = timeStartExp-millis();
   if (timeleft > 0) {
-    timertext.html(Math.round(timeleft/1000));
-    setTimeout(waitToStartScript, 100)
+    timertext.html(round(timeleft/1000));
+    setTimeout(fakeWait, 1000)
+  } else {
+    advanceInterface();
+  }
+}
+
+function waitToStartScript() {
+  let remaining = timeToStart();
+  let hours = remaining[0];
+  let mins = remaining[1];
+  let seconds = remaining[2];
+  let timeleft = remaining[3];
+  if (timeleft > 0) {
+    hours = String(hours).padStart(2, '0');
+    mins = String(mins).padStart(2, '0');
+    seconds = String(seconds).padStart(2, '0');
+    timertext.html(hours+":"+mins+":"+seconds);
+    setTimeout(waitToStartScript, 500)
   } else {
     advanceInterface();
   }
@@ -307,17 +296,57 @@ function parseShowData() {
   // console.log(story);
   // console.log(showtimes);
   // console.log(new Date("Fri, 26 Sep 2014 18:30:00 GMT"));
-  let shows = [
-    new Date(2023, 3, 27, 16, 30),
-    new Date(2023, 3, 27, 17, 30),
-    new Date(2023, 3, 27, 18, 30),
-  ];
-  let nextshow = nearestDate(shows);
-  console.log("next show starts: "+shows[nextshow]);
+  // let shows = [
+  //   new Date(2023, 3, 27, 16, 30),
+  //   new Date(2023, 3, 27, 17, 30),
+  //   new Date(2023, 3, 27, 18, 30),
+  // ];
+  nextshow = nearestFutureShow();
+  nextshowtime = arrToDate(showtimes[nextshow]);
+  console.log("next show starts: "+nextshowtime.toLocaleString());
 
   // load minimap
   // parseLocations();
   parseStoryLocations();
+}
+
+function timeToStart() {
+  let currtime = new Date();
+  let diff =(nextshowtime.getTime() - currtime.getTime()) / 1000;
+  let seconds = round(diff);
+  let result = divmod(seconds, 60);
+  let result2 = divmod(result[0], 60);
+  // console.log(result2[0], ":", result2[1], ":", result[1], " ", seconds);
+  return [result2[0], result2[1], result[1], seconds];
+}
+
+const divmod = (x, y) => [Math.floor(x / y), x % y];
+
+// from https://gist.github.com/miguelmota/28cd8999e8260900140273b0aaa57513
+function nearestFutureShow () {
+  let currtime = new Date();
+  console.log(currtime.toLocaleString());
+  let min;
+  for (i in showtimes) {
+    // console.log(i);
+    let tt = showtimes[i];
+    let show = arrToDate(tt);
+    // console.log(i, show.toLocaleString());
+    let diff = currtime - show;
+    if (min == undefined) {
+      min = diff;
+      minidx = i;
+    } else if (diff < min && min > 0) {
+      min = diff;
+      minidx = i;
+    }
+  }
+  // console.log(minidx, min);
+  return minidx;
+}
+
+function arrToDate(tt) {
+  return new Date(tt[0], tt[1], tt[2], tt[3], tt[4]);
 }
 
 function loadAudioFiles() {
@@ -331,29 +360,4 @@ function loadAudioFiles() {
     }
     // audioFile = createAudio(story[thisState].audio);
   }
-}
-
-// from https://gist.github.com/miguelmota/28cd8999e8260900140273b0aaa57513
-function nearestDate (dates, target) {
-  if (!target) {
-    target = Date.now()
-  } else if (target instanceof Date) {
-    target = target.getTime()
-  }
-
-  let nearest = Infinity
-  let winner = -1
-
-  dates.forEach(function (date, index) {
-    if (date instanceof Date) {
-      date = date.getTime()
-    }
-    let distance = Math.abs(date - target)
-    if (distance < nearest) {
-      nearest = distance
-      winner = index
-    }
-  })
-
-  return winner
 }

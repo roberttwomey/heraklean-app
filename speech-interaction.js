@@ -50,8 +50,8 @@ speechRec.onresult = (event) => {
 
     processSpeech(said);
     
-    // advance and liston
-    bNewStep = true;
+    // advance and listen
+    // bNewStep = true;
     // lastHtml = speechoutput.innerHTML;
   } else {
     // temp result: display in light gray
@@ -59,7 +59,7 @@ speechRec.onresult = (event) => {
     // speechoutput.html(tempspeechoutput);
     // speechoutput.innerHTML = tempspeechoutput;
     speechoutput.innerHTML = said;
-    speechoutput.style.color = "gray";
+    speechoutput.style.color =  "gray";
   }
 };
 
@@ -67,6 +67,8 @@ speechRec.onresult = (event) => {
 const speechSynth = window.speechSynthesis;
 
 function processSpeech(said) {
+  stopListening();
+
   // said contains the string that was heard
   console.log(thisState, said)
   if (story[thisState].type == "question") {
@@ -76,9 +78,12 @@ function processSpeech(said) {
     // advanceInterface();
     return;
   } else {
-    for(idx in story[thisState].next) {
-      // loop over next possibilities for this storypoint
-      let nextidx = story[thisState].next[idx];
+    // COMMENT OUT, DON"T NEED 
+    // loop over next possibilities for this storypoint
+    for (idx in story[thisState].next) {
+      console.log("processSpeech(): "+idx);
+      let nextidx = story[thisState].next[0];
+      console.log("processSpeech(): "+nextidx);
       for (keyidx in story[nextidx].keywords) {
         // check all the keyphrases for this storypoint
         let phrase = story[nextidx].keywords[keyidx];
@@ -99,6 +104,7 @@ function processSpeech(said) {
   // sayAndListen("I heard " + said);
   // sayAndListen(story[thisState].text);
   // sayAndListen(story[thisState].text);
+  console.log("processSpeech(): finished listening... starting again")
   doListen();
 }
 
@@ -112,8 +118,9 @@ function processSpeech(said) {
 function doMicTest() {
   console.log("doing mic test");
   
-  bNewStep = true;
-  thisState = "mictest";
+  // bNewStep = true;
+  
+  // thisState = "mictest"; // should already be set in sketch
   
   // sayAndListen(story[thisState].text);
   doListen();
@@ -147,18 +154,21 @@ function doListen() {
   console.log("... now listening ...");
   // toggleRecButton();
 
+  bListening = true;
   recbtn.style('background-color', 'red');
   speechoutput.html("(speak now)");
   speechoutput.style("color", "gray");
+  speechoutput.show();
 
   // speechRec.addEventListener('end', speechRec.start(false, true));
   // speechRec.start(false, true);
   // speechRec.addEventListener('end', () => speechRec.start(false, true)); 
-  speechRec.addEventListener('end', () => stopListening()); 
+  // speechRec.addEventListener('end', () => stopListening()); 
   speechRec.start(false, true);
 }
 
 function stopListening() {
+  console.log("stopListening()");
   speechRec.stop();
   bListening = false;
   recbtn.style('background-color', '#f0f0f0');

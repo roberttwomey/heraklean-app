@@ -54,10 +54,10 @@ let options = {
 }
 
 function setupMap() {
-  canvas = createCanvas(500, 1000);
+  // canvas = createCanvas(500, 1000);
   // canvas = createCanvas(380, 700);
   // canvas = createCanvas(800, 800);
-  // canvas = createCanvas(400, 600);
+  canvas = createCanvas(400, 600);
   // canvas = createCanvas(300, 450);
   canvas.parent("mapdiv");
   // canvas.hide();

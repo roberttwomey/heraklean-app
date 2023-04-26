@@ -128,11 +128,11 @@ function createWaiting() {
   timertext = createP(Math.round(waittime/1000))
   timertext.parent("countdown");
   timertext.style("position", "relative");
-  timertext.style("font-size", "384pt");
+  timertext.style("font-size", "128pt");
   timertext.style("color", "#f0f0f0");
-  timertext.style("top", "50vh");
+  timertext.style("top", "45vh");
   timertext.style("margin", "0 auto");
-  timertext.style("line-height", "90px");
+  timertext.style("line-height", "128pt");
   timertext.hide();
 
   waittext = createP(story["waiting"].text);
