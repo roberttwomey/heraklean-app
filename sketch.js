@@ -101,7 +101,7 @@ function setup() {
 
   // options
   createOffboarding();
-  
+
   thisState = "splash";
 }
 
@@ -215,7 +215,8 @@ function renderInterface() {
 
     // TODO fix this formatting code. really ugly.
     timertext.show();
-    timeStartExp = millis() + 5000;
+    // timeStartExp = millis() + 5000;
+    timeStartExp = millis() + 30000;
     fakeWait();
 
     // waitToStartScript();

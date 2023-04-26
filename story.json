@@ -42,7 +42,7 @@
             "keywords": [""]
         },
         "mictest": {
-            "text": "Test your microphone.<br><br>Repeat the phrase:<br><br>'My voice is my password'<br>",
+            "text": "Test your microphone.<br>Repeat the phrase:<br><br>'My voice is my password'<br>",
             "next": ["waiting"],
             "keywords": ["mike", "check", "test"]
         },
@@ -161,7 +161,15 @@
           "pedicab": {
             "type": "audio",
             "audio": "assets/8x.mp3",
-            "next": ["stableself"]
+            "next": ["endingtrunc"]
+          },
+          "endingtrunc": {
+            "type": "audio",
+            "audio": "assets/endingscenes_truncated.mp3", 
+            "lat": 32.703719, 
+            "lng": -117.163135,
+            "radius": 30,
+            "next": ["offboarding"]
           },
           "offboarding": {
             "text": "Thank you for your participation. Please proceed to offboarding for your Stable Swag, or stay to listen to the collective hopes for the future.",

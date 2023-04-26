@@ -13,7 +13,8 @@ let v1;
 // this variable stores the current position
 let myposition;
 let lastgeoloc = 0;
-let locinterval = 500; // 0.5 sec;
+// let locinterval = 500; // 0.5 sec;
+let locinterval = 5000;
 
 let simposition; // simulated position when clicking
 
