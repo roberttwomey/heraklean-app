@@ -42,7 +42,7 @@
             "keywords": [""]
         },
         "mictest": {
-            "text": "Test your microphone.<br><br>Repeat the phrase:<br><br>'My voice is my password'<br>three times.",
+            "text": "Test your microphone.<br><br>Repeat the phrase:<br><br>'My voice is my password'<br>",
             "next": ["waiting"],
             "keywords": ["mike", "check", "test"]
         },
@@ -95,24 +95,46 @@
             "lng": -117.16306047783291,
             "radius": 30,
             "sounds": ["cattle_eating.mp3", "cowdrone.m4a"],
-            "next": ["meetaugus", "manure"]
+            "next": ["history1", "manure1"],
+            "nexttext": ["Option A: History (White Flag)", "Option B: Manure (Purple Flag)"]
           },
-          "meetaugus": {
+          "history1": {
             "type": "audio",
             "audio": "assets/5.mp3",
             "lat": 32.70381386410789,
             "lng": -117.1627945560613,
             "radius": 30,
             "sounds": ["brook.mp3"],
-            "next": ["manure"]
+            "next": ["refrigeration", "manure2"],
+            "nexttext": ["Option A: Stable Refrigeration (Black Flag)", "Option B: Manure (Purple Flag)"]
           },
-          "manure": { 
+          "manure1": { 
             "type": "audio",
             "audio": "assets/6.mp3",
             "lat": 32.70364233121849, 
             "lng": -117.16295037940655,
             "radius": 30,
-            "next": ["refrigeration"]
+            "next": ["refrigeration", "history2"],
+            "nexttext": ["Option A: Stable Refrigeration (Black Flag)", "Option B: History (White Flag)"]
+          },
+          "manure2": { 
+            "type": "audio",
+            "audio": "assets/6.mp3",
+            "lat": 32.70364233121849, 
+            "lng": -117.16295037940655,
+            "radius": 30,
+            "next": ["refrigeration"],
+            "nexttext": ["Proceed to Stable Refrigeration (Black Flag)"]
+          },
+          "history2": {
+            "type": "audio",
+            "audio": "assets/5.mp3",
+            "lat": 32.70381386410789,
+            "lng": -117.1627945560613,
+            "radius": 30,
+            "sounds": ["brook.mp3"],
+            "next": ["refrigeration"],
+            "nexttext": ["Proceed to Stable Refrigeration (Black Flag)"]
           },
           "refrigeration": {             
             "type": "audio",
@@ -120,7 +142,8 @@
             "lat": 32.703436405162336,
             "lng": -117.16306584225097,
             "radius": 30,
-            "next": ["tendthegrass"]
+            "next": ["pedicab", "tendthegrass"],
+            "nexttext": ["Option A: Pedicab (look for it!)",  "Option B: Tend the Grass (Orange Flag)"]
           },
           "tendthegrass": {
             "type": "audio",
@@ -153,6 +176,16 @@
             "lng": -117.163595,
             "radius": 30,
             "next": ["radio", "offboarding"]
+          },
+          "pedicab": {
+            "type": "audio",
+            "audio": "assets/8x.mp3",
+            "next": ["stableself"]
+          },
+          "offboarding": {
+            "text": "Proceed to offboarding, or stay to listen to the collective widsom.",
+            "next": [""],
+            "keywords": [""]
           }
     }
 }

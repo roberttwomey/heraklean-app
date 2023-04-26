@@ -168,5 +168,30 @@ function hideAll() {
   timertext.hide();  
   waittext.hide();
 
-  
+  optionA.hide();
+  optionB.hide();
+}
+
+function createOptions() {
+  optionA = createButton("Option A");
+  optionA.parent("contents");
+  optionA.size(300, 100);
+  optionA.style("top", "100px");
+  optionA.style("margin", "0 auto");
+  optionA.mousePressed(chooseOptionA);
+
+  optionB = createButton("Option B");
+  optionB.parent("contents");
+  optionB.size(300, 100);
+  optionB.style("margin", "0 auto");
+  optionB.style("top", "150px");
+  optionB.mousePressed(chooseOptionB);
+
+  optionA.hide();
+  optionB.hide();
+}
+
+function showOptions() {
+  optionA.show();
+  optionB.show();
 }

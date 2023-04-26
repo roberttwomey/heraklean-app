@@ -59,6 +59,9 @@ let waittime = 5*1000;
 let currSound;
 let audioFiles = {};
 
+// options
+let optionA, optionB;
+let bOptions = false;
 
 function preload() {
   // vid = createImg("clouds2.gif", "video of clouds", "anonymous", );
@@ -107,6 +110,9 @@ function setup() {
 
   // screen 5
   setupRadio();
+
+  // options
+  createOptions();
   
   // minimap for debugging
   setupMap();
@@ -138,7 +144,15 @@ function advanceInterface() {
 
   // location based advancement
   if (story[thisState].type == "audio" || story[thisState].type == "question") {
-    waitForNextLoc();
+    // DISABLE LOCATION FOR WALKTHROUGH
+    // waitForNextLoc();
+    if (story[thisState].next.length > 1) {
+    } else {
+      let nextState = story[thisState].next[0];
+      thisState = nextState;
+      storeItem("state", thisState);
+      console.log("--> moved to "+thisState);
+    }
   } else {  
     let nextState = story[thisState].next[0];
     thisState = nextState;
@@ -146,6 +160,35 @@ function advanceInterface() {
     console.log("--> moved to "+thisState);
   }
   renderInterface();
+}
+
+function presentOptions() {
+  if (bOptions == true) {
+    // display options as buttons with callbacks that advance status
+    console.log("presenting options for ", thisState);
+    optionA.html(story[thisState].nexttext[0]);
+    optionB.html(story[thisState].nexttext[1]);
+    showOptions();
+   setTimeout(presentOptions, 2000);
+  }
+}
+
+function chooseOptionA() {
+  let nextState = story[thisState].next[0];
+  thisState = nextState;
+  storeItem("state", thisState);
+  console.log("--> moved to "+thisState);
+  bOptions = false;
+  setTimeout(renderInterface, 200);
+}
+
+function chooseOptionB() {
+  let nextState = story[thisState].next[1];
+  thisState = nextState;
+  storeItem("state", thisState);
+  console.log("--> moved to "+thisState);
+  bOptions = false;
+  setTimeout(renderInterface, 200);
 }
 
 function renderInterface() {
@@ -202,12 +245,21 @@ function renderInterface() {
     chartext.show()
     chartext.html(charsel.value());
 
-    // play and advance
-    audioFiles[thisState].play();
-    audioFiles[thisState].onended(advanceInterface)
-
+    if (story[thisState].next.length > 1) {
+      // showOptions();
+      // presentOptions();
+      bOptions = true;
+      audioFiles[thisState].play();
+      audioFiles[thisState].onended(presentOptions);
+    } else {
+      // play and advance
+      audioFiles[thisState].play();
+      audioFiles[thisState].onended(advanceInterface)
+    }
     if (thisState == "onboarding") {
       showMap();
+    } else {
+      hideMap();
     }
   } else if (story[thisState].type == "question") {
     chartext.show()
