@@ -48,7 +48,7 @@
         },
         "waiting": {
             "text": "Waiting for the experience to begin",
-            "next": ["tendthegrass"],
+            "next": ["firstsection"],
             "keywords": ["done"]
         },
         "finish": {
