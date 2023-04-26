@@ -164,8 +164,7 @@
             "next": ["stableself"]
           },
           "offboarding": {
-            "text": "Thank you for your participation. Please proceed to offboarding \
-            for your Stable Swag, or stay to listen to the collective hopes for the future.",
+            "text": "Thank you for your participation. Please proceed to offboarding for your Stable Swag, or stay to listen to the collective hopes for the future.",
             "next": [""],
             "keywords": [""]
           }

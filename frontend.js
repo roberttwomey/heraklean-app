@@ -151,7 +151,7 @@ function createWaiting() {
   waittext.hide();
 }
 
-function createGoodbye() {
+function createOffboarding() {
   offboardingtext = createP(story["offboarding"].text);
   offboardingtext.style("position", "relative");
   offboardingtext.parent("contents");
@@ -189,7 +189,7 @@ function hideAll() {
   optionA.hide();
   optionB.hide();
 
-  offboarding.hide();
+  offboardingtext.hide();
 }
 
 function createOptions() {

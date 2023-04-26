@@ -99,6 +99,9 @@ function setup() {
   // minimap for debugging
   setupMap();
 
+  // options
+  createOffboarding();
+  
   thisState = "splash";
 }
 
