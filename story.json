@@ -48,7 +48,7 @@
         },
         "waiting": {
             "text": "Waiting for the experience to begin",
-            "next": ["firstsection"],
+            "next": ["tendthegrass"],
             "keywords": ["done"]
         },
         "finish": {
@@ -120,6 +120,14 @@
           },
           "tendthegrass": {
             "type": "audio",
+            "audio": "assets/RegularEndingScenes_mixdown.mp3", 
+            "lat": 32.703719, 
+            "lng": -117.163135,
+            "radius": 30,
+            "next": ["offboarding"]
+          },
+          "tendthegrass_single": {
+            "type": "audio",
             "audio": "assets/8.mp3", 
             "lat": 32.703719, 
             "lng": -117.163135,
@@ -156,7 +164,8 @@
             "next": ["stableself"]
           },
           "offboarding": {
-            "text": "Proceed to offboarding, or stay to listen to the collective widsom.",
+            "text": "Thank you for your participation. Please proceed to offboarding \
+            for your Stable Swag, or stay to listen to the collective hopes for the future.",
             "next": [""],
             "keywords": [""]
           }

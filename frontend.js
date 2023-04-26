@@ -151,6 +151,15 @@ function createWaiting() {
   waittext.hide();
 }
 
+function createGoodbye() {
+  offboardingtext = createP(story["offboarding"].text);
+  offboardingtext.style("position", "relative");
+  offboardingtext.parent("contents");
+  offboardingtext.style("top", "50vh");
+  offboardingtext.style("line-height", "24px");
+  offboardingtext.hide();
+}
+
 function hideAll() {
   nextbtn.hide();
 
@@ -158,6 +167,7 @@ function hideAll() {
   
   chartext.hide();
   charsel.hide();
+  charbiotext.hide();
 
   // advtext.hide();
   // advslider.hide();
@@ -178,6 +188,8 @@ function hideAll() {
 
   optionA.hide();
   optionB.hide();
+
+  offboarding.hide();
 }
 
 function createOptions() {

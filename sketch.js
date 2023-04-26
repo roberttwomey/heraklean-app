@@ -42,6 +42,9 @@ let audioFiles = {};
 let optionA, optionB;
 let bOptions = false;
 
+// offboarding
+let offboardingtext;
+
 function preload() {
   // vid = createImg("clouds2.gif", "video of clouds", "anonymous", );
   vid = createImg("assets/clouds2.gif");
@@ -214,7 +217,10 @@ function renderInterface() {
 
     // waitToStartScript();
 
-  } else if (thisState == "radio") {  
+  } else if (thisState == "offboarding") {
+    offboardingtext.show();
+    setTimeout(renderInterface, 5000);
+  }else if (thisState == "radio") {  
     showRadio();
     radiotext.show();
     let startRandomStation = sample([changeoma, changelax, changelnk, changemm]);
