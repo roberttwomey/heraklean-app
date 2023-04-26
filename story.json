@@ -48,7 +48,7 @@
         },
         "waiting": {
             "text": "Waiting for the experience to begin",
-            "next": ["onboarding"],
+            "next": ["firstsection"],
             "keywords": ["done"]
         },
         "finish": {
@@ -62,45 +62,18 @@
             "next": [],
             "keywords": ["radio"]
         },
-        "onboarding": {
-            "type": "audio",
-            "audio": "assets/1.mp3",
-            "lat": 32.70444346073959,
-            "lng": -117.16358440260593,
-            "radius": 30,
-            "next": ["eucalyptus"]
-          },
-          "eucalyptus": {
-            "type": "audio",
-            "audio": "assets/2.mp3",
-            "lat": 32.70428740548589,
-            "lng": -117.16348707675935,
-            "radius": 30,
-            "next": ["resonate"]
-          },
-          "resonate": {
-            "type": "audio",
-            "audio": "assets/3.mp3",
-            "lat": 32.704136938772486,
-            "lng": -117.163408143133,
-            "radius": 30,
-            "label": "resonate",
-            "sounds": ["cranes.m4a"],
-            "next": ["boats"]
-          },
-          "boats": {
-            "type": "audio",
-            "audio": "assets/4.mp3",
-            "lat": 32.704165742420855,
-            "lng": -117.16306047783291,
-            "radius": 30,
-            "sounds": ["cattle_eating.mp3", "cowdrone.m4a"],
-            "next": ["history1", "manure1"],
-            "nexttext": ["Option A: History (White Flag)", "Option B: Manure (Purple Flag)"]
-          },
+        "firstsection": {
+          "type": "audio",
+          "audio": "assets/First_section_mixdown.mp3",
+          "lat": 32.70444346073959,
+          "lng": -117.16358440260593,
+          "radius": 30,
+          "next": ["history1", "manure1"],
+          "nexttext": ["Option A: History (White Flag)", "Option B: Manure (Purple Flag)"]
+        },
           "history1": {
             "type": "audio",
-            "audio": "assets/5.mp3",
+            "audio": "assets/History-AGUS_mixdown.mp3",
             "lat": 32.70381386410789,
             "lng": -117.1627945560613,
             "radius": 30,
@@ -110,7 +83,7 @@
           },
           "manure1": { 
             "type": "audio",
-            "audio": "assets/6.mp3",
+            "audio": "assets/Manure_mixdown.mp3",
             "lat": 32.70364233121849, 
             "lng": -117.16295037940655,
             "radius": 30,
@@ -119,26 +92,26 @@
           },
           "manure2": { 
             "type": "audio",
-            "audio": "assets/6.mp3",
+            "audio": "assets/Manure_mixdown.mp3",
             "lat": 32.70364233121849, 
             "lng": -117.16295037940655,
             "radius": 30,
-            "next": ["refrigeration"],
-            "nexttext": ["Proceed to Stable Refrigeration (Black Flag)"]
+            "next": ["pedicab", "tendthegrass"],
+            "nexttext": ["Option A: Pedicab (look for it!)",  "Option B: Tend the Grass (Orange Flag)"]
           },
           "history2": {
             "type": "audio",
-            "audio": "assets/5.mp3",
+            "audio": "assets/History-AGUS_mixdown.mp3",
             "lat": 32.70381386410789,
             "lng": -117.1627945560613,
             "radius": 30,
             "sounds": ["brook.mp3"],
-            "next": ["refrigeration"],
-            "nexttext": ["Proceed to Stable Refrigeration (Black Flag)"]
+            "next": ["pedicab", "tendthegrass"],
+            "nexttext": ["Option A: Pedicab (look for it!)",  "Option B: Tend the Grass (Orange Flag)"]
           },
           "refrigeration": {             
             "type": "audio",
-            "audio": "assets/7.mp3",
+            "audio": "assets/StableRefrigeration_mixdown.mp3",
             "lat": 32.703436405162336,
             "lng": -117.16306584225097,
             "radius": 30,
