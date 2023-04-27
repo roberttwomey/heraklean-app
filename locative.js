@@ -6,15 +6,12 @@
 // https://editor.p5js.org/robert.twomey/full/78R7AgEZp
 
 let simulate = false;
-
-let thismap;
 let v1;
 
 // this variable stores the current position
 let myposition;
 let lastgeoloc = 0;
-// let locinterval = 500; // 0.5 sec;
-let locinterval = 5000;
+let locinterval = 1000;
 
 let simposition; // simulated position when clicking
 
@@ -22,23 +19,17 @@ let simposition; // simulated position when clicking
 let closest;
 let dist;
 
+// mappa stuff
+const mappa = new Mappa("Leaflet");
 let myMap;
 let canvas;
-let myMapDiv;
 
-const mappa = new Mappa("Leaflet");
-// let sounds = [];
 let sounds = {};
-
 let locations = {};
-// let count = 0;
-// let lastHtml = "";
-let locDiv;
-let simulateCheck;
 
-// for adding new points
-let label = "";
-let newPoint = false;
+// DOM elements
+let simulateCheck;
+let myMapDiv;
 
 let hidePoint = true;
 
@@ -55,13 +46,8 @@ let options = {
 }
 
 function setupMap() {
-  // canvas = createCanvas(500, 1000);
-  // canvas = createCanvas(380, 700);
-  // canvas = createCanvas(800, 800);
   canvas = createCanvas(400, 600);
-  // canvas = createCanvas(300, 450);
   canvas.parent("mapdiv");
-  // canvas.hide();
 
   // to store position
   v1 = createVector(width / 2, height / 2);
@@ -96,68 +82,68 @@ function showMap() {
   myMapDiv.show();
 }
 
-function draw() {
-  background(220);
+// function draw() {
+//   background(220);
 
-  clear();
-  const radyshell = myMap.latLngToPixel(32.79, -117.16);
-  // Using that position, draw an ellipse
-  fill(255, 255, 0);
-  ellipse(radyshell.x, radyshell.y, 5, 5);
+//   clear();
+//   const radyshell = myMap.latLngToPixel(32.79, -117.16);
+//   // Using that position, draw an ellipse
+//   fill(255, 255, 0);
+//   ellipse(radyshell.x, radyshell.y, 5, 5);
 
-  noStroke();
-  if (hidePoint == false) {
-    fill(255, 194, 0);
-    circle(v1.x, v1.y, 10);
+//   noStroke();
+//   if (hidePoint == false) {
+//     fill(255, 194, 0);
+//     circle(v1.x, v1.y, 10);
 
-    if (myposition != undefined) {
-      const thispxloc = myMap.latLngToPixel(
-        myposition.coords.latitude,
-        myposition.coords.longitude
-      );
-      fill(255, 255, 0);
-      circle(thispxloc.x, thispxloc.y, 10);
-    }
-  }
-  fill(255, 255, 0);
-  circle(mouseX, mouseY, 15);
+//     if (myposition != undefined) {
+//       const thispxloc = myMap.latLngToPixel(
+//         myposition.coords.latitude,
+//         myposition.coords.longitude
+//       );
+//       fill(255, 255, 0);
+//       circle(thispxloc.x, thispxloc.y, 10);
+//     }
+//   }
+//   fill(255, 255, 0);
+//   circle(mouseX, mouseY, 15);
 
-  if (myposition != undefined && simposition != undefined) {
-    fill(255, 255, 0);
-    text(
-      "geolocation: " +
-        myposition.coords.latitude +
-        " " +
-        myposition.coords.longitude,
-      50,
-      30
-    );
-    text("clicked: " + round(simposition.lat, 6) + " " + round(simposition.lng, 6), 50, 50);
-    text("distance: "+round(dist, 2), 50, 70)
-  }
+//   if (myposition != undefined && simposition != undefined) {
+//     fill(255, 255, 0);
+//     text(
+//       "geolocation: " +
+//         myposition.coords.latitude +
+//         " " +
+//         myposition.coords.longitude,
+//       50,
+//       30
+//     );
+//     text("clicked: " + round(simposition.lat, 6) + " " + round(simposition.lng, 6), 50, 50);
+//     text("distance: "+round(dist, 2), 50, 70)
+//   }
 
-  for (let p in locations) {
-    const thispxloc = myMap.latLngToPixel(locations[p].lat, locations[p].lng);
-    if (p == closest) {
-      fill(255, 194, 0);
-      circle(thispxloc.x, thispxloc.y, 10);
-      fill(255, 255, 0);
-      text(round(dist, 2), thispxloc.x + 5, thispxloc.y - 15)
-      // console.log("closest point: " + locations[closest].label + " " + dist);
-    }
-    fill(255, 255, 0);
-    circle(thispxloc.x, thispxloc.y, 6);
+//   for (let p in locations) {
+//     const thispxloc = myMap.latLngToPixel(locations[p].lat, locations[p].lng);
+//     if (p == closest) {
+//       fill(255, 194, 0);
+//       circle(thispxloc.x, thispxloc.y, 10);
+//       fill(255, 255, 0);
+//       text(round(dist, 2), thispxloc.x + 5, thispxloc.y - 15)
+//       // console.log("closest point: " + locations[closest].label + " " + dist);
+//     }
+//     fill(255, 255, 0);
+//     circle(thispxloc.x, thispxloc.y, 6);
     
-    // text(p, thispxloc.x+5, thispxloc.y+5);
-    text(p + ": " + locations[p].label, 
-         thispxloc.x + 5, 
-         thispxloc.y + 5);
-  }
-  if (millis() - lastgeoloc > locinterval) {
-    getLocation();
-    lastgeoloc = millis();
-  }
-}
+//     // text(p, thispxloc.x+5, thispxloc.y+5);
+//     text(p + ": " + locations[p].label, 
+//          thispxloc.x + 5, 
+//          thispxloc.y + 5);
+//   }
+//   if (millis() - lastgeoloc > locinterval) {
+//     getLocation();
+//     lastgeoloc = millis();
+//   }
+// }
 
 function toggleSimulate() {
   simulate = simulateCheck.checked();  
@@ -209,9 +195,9 @@ function showError(error) {
   }
 }
 
-function mouseClicked() {
-  updatePosition();
-}
+// function mouseClicked() {
+//   updatePosition();
+// }
 
 function updatePosition() {
   hidePoint = false;
@@ -308,7 +294,6 @@ function findClosestInList(thislatlng, thislist) {
     }
     // console.log(thislatlng, locations[p]);
   }
-
   return [closestKey, mindist];
 }
 

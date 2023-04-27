@@ -45,6 +45,7 @@ let waittext, timertext;
 let audioCueTime = 0;
 
 let bStartedStory = false;
+let bResuming = false;
 
 // soundfiles
 let audioFiles = {};
@@ -105,7 +106,7 @@ function setup() {
   createOptions();
   
   // minimap for debugging
-  setupMap();
+  // setupMap();
 
   // options
   createOffboarding();
@@ -121,6 +122,7 @@ function setup() {
       if (!isNaN(lastTimeStart)) {
         fastForwardStory(lastState, lastTimeStart);
         nextbtn.html("resume");
+        bResuming = true;
         // story["splash"].next = [thisState];
         // thisState = "splash";
       } else {
@@ -236,6 +238,7 @@ function renderInterface() {
   } else if (thisState == "character") {
     nextbtn.show();
     nextbtn.html('next');
+    if (bResuming) nextbtn.html("resume");
     chartext.show();
     charsel.show();
 
@@ -440,17 +443,10 @@ function waitToStartSchedule() {
 function parseStoryData() {
   story = jsoncontents["story"];
   showtimes = jsoncontents["showtimes"];
-  // console.log(story);
-  // console.log(showtimes);
-  // console.log(new Date("Fri, 26 Sep 2014 18:30:00 GMT"));
-  // let shows = [
-  //   new Date(2023, 3, 27, 16, 30),
-  //   new Date(2023, 3, 27, 17, 30),
-  //   new Date(2023, 3, 27, 18, 30),
-  // ];
-  nextshow = nearestFutureShow();
-  nextshowtime = arrToDate(showtimes[nextshow]);
-  console.log("next show starts: "+nextshowtime.toLocaleString());
+  
+  // nextshow = nearestFutureShow();
+  // nextshowtime = arrToDate(showtimes[nextshow]);
+  // console.log("next show starts: "+nextshowtime.toLocaleString());
 
   // load minimap GEOLOC stuff
   // parseLocations();
@@ -461,44 +457,44 @@ function parseStoryData() {
   }
 }
 
-function timeToStart() {
-  let currtime = new Date();
-  let diff =(nextshowtime.getTime() - currtime.getTime()) / 1000;
-  let seconds = round(diff);
-  let result = divmod(seconds, 60);
-  let result2 = divmod(result[0], 60);
-  // console.log(result2[0], ":", result2[1], ":", result[1], " ", seconds);
-  return [result2[0], result2[1], result[1], seconds];
-}
+// function timeToStart() {
+//   let currtime = new Date();
+//   let diff =(nextshowtime.getTime() - currtime.getTime()) / 1000;
+//   let seconds = round(diff);
+//   let result = divmod(seconds, 60);
+//   let result2 = divmod(result[0], 60);
+//   // console.log(result2[0], ":", result2[1], ":", result[1], " ", seconds);
+//   return [result2[0], result2[1], result[1], seconds];
+// }
 
-const divmod = (x, y) => [Math.floor(x / y), x % y];
+// const divmod = (x, y) => [Math.floor(x / y), x % y];
 
-// from https://gist.github.com/miguelmota/28cd8999e8260900140273b0aaa57513
-function nearestFutureShow () {
-  let currtime = new Date();
-  console.log(currtime.toLocaleString());
-  let min;
-  for (i in showtimes) {
-    // console.log(i);
-    let tt = showtimes[i];
-    let show = arrToDate(tt);
-    // console.log(i, show.toLocaleString());
-    let diff = currtime - show;
-    if (min == undefined) {
-      min = diff;
-      minidx = i;
-    } else if (diff < min && min > 0) {
-      min = diff;
-      minidx = i;
-    }
-  }
-  // console.log(minidx, min);
-  return minidx;
-}
+// // from https://gist.github.com/miguelmota/28cd8999e8260900140273b0aaa57513
+// function nearestFutureShow () {
+//   let currtime = new Date();
+//   console.log(currtime.toLocaleString());
+//   let min;
+//   for (i in showtimes) {
+//     // console.log(i);
+//     let tt = showtimes[i];
+//     let show = arrToDate(tt);
+//     // console.log(i, show.toLocaleString());
+//     let diff = currtime - show;
+//     if (min == undefined) {
+//       min = diff;
+//       minidx = i;
+//     } else if (diff < min && min > 0) {
+//       min = diff;
+//       minidx = i;
+//     }
+//   }
+//   // console.log(minidx, min);
+//   return minidx;
+// }
 
-function arrToDate(tt) {
-  return new Date(tt[0], tt[1], tt[2], tt[3], tt[4]);
-}
+// function arrToDate(tt) {
+//   return new Date(tt[0], tt[1], tt[2], tt[3], tt[4]);
+// }
 
 function loadAudioFiles() {
   // audio nodes
