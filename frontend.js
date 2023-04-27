@@ -137,7 +137,8 @@ function createWaiting() {
   timertext.parent("countdown");
   timertext.style("position", "relative");
   timertext.style("font-size", "128pt");
-  timertext.style("color", "#f0f0f0");
+  // timertext.style("color", "#f0f0f0");
+  timertext.style("color", "#bfe5e5");
   timertext.style("top", "45vh");
   timertext.style("margin", "0 auto");
   timertext.style("line-height", "128pt");

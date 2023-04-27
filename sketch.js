@@ -33,6 +33,12 @@ let bListening = false;
 let waittext, timertext;
 let timeStartExp;
 let waittime = 5*1000;
+let timeStoryClock;
+let clockTimeStoryStarted; // Date
+
+let audioCueTime = 0;
+
+let bStartedStory = false;
 
 // soundfiles
 let currSound;
@@ -51,7 +57,7 @@ function preload() {
   vid.show();
   vid.parent("wallpaper");
 
-  // story
+  // read story file
   jsoncontents = loadJSON(storyfile, parseShowData);
 }
 
@@ -69,12 +75,13 @@ function setup() {
   let uid = getItem('uid');
   if (uid === null) {
     uid = Date.now().toString(36) + Math.floor(Math.pow(10, 12) + Math.random() * 9*Math.pow(10, 12)).toString(36);
+    console.log("new uid");
     storeItem("uid", uid);
   }
   console.log("---", uid);
 
-  console.log("my last state ", getItem("state"));
-  // console.log(story);
+  thisState = "splash";
+  
   // screen 0
   createSplashScreen();
   
@@ -102,7 +109,54 @@ function setup() {
   // options
   createOffboarding();
 
-  thisState = "splash";
+  // check last time and get started
+  // check last state position
+  let lastState = getItem("state");
+  // console.log("last state", lastState);
+  if (lastState in story) {
+    // check previous starttime, are we resuming? and if so, at what point?
+    let tempTime = Date.parse(getItem("timestarted"));
+    if (!isNaN(tempTime)) {
+      console.log("clockTimeStarted", tempTime);
+      clockTimeStoryStarted = tempTime;
+      let currtime = new Date();
+      storyTimeElapsed = currtime - tempTime;
+      console.log("on startup \'"+lastState+"\': story time elapsed", storyTimeElapsed/1000.0);
+      fastForwardStory(lastState, storyTimeElapsed);
+
+      story["splash"].next = [thisState];
+      thisState = "splash";
+    
+    }
+  } else {
+    thisState = "splash";
+  }
+  
+  // renderInterface();
+}
+
+function fastForwardStory(resumeState, elapsedTime) {
+  // if (story[lastState].tim
+  let elapsedTimeSeconds = elapsedTime / 1000.0;
+  console.log("fastForward() from", resumeState, "with", elapsedTimeSeconds, "seconds elapsed");
+  thisState = resumeState;
+
+  let done = false;
+  while (!done) {
+    let storytime = story[thisState].starttime + story[thisState].duration;
+    console.log("storytime at end of",thisState, ":", storytime);
+    if (storytime < elapsedTimeSeconds) {
+      thisState = story[thisState].next[0]; // change to geoloc, instaed of choosing first option
+    } else {
+      done = true;
+    }
+  }
+  if (thisState == "offboarding") {
+    thisState = "splash";
+  } else {
+    audioCueTime = elapsedTimeSeconds - story[thisState].starttime;
+    console.log("stopping at", thisState,"at", audioCueTime,"seconds in");
+  }
 }
 
 function charSelectEvent() {
@@ -131,20 +185,128 @@ function advanceInterface() {
   if (story[thisState].type == "audio" || story[thisState].type == "question") {
     // DISABLE LOCATION FOR WALKTHROUGH
     // waitForNextLoc();
+
+    // if (bGeolocStarted == false) {
+    //   bGeolocStarted = true;
+    //   console.log("started geoloc: ", thisState);
+    // }
+
     if (story[thisState].next.length > 1) {
     } else {
       let nextState = story[thisState].next[0];
       thisState = nextState;
       storeItem("state", thisState);
-      console.log("--> moved to "+thisState);
+      console.log("--> moved to "+thisState, "stored");
     }
   } else {  
     let nextState = story[thisState].next[0];
     thisState = nextState;
     storeItem("state", thisState);
-    console.log("--> moved to "+thisState);
+    console.log("--> moved to"+thisState);
   }
   renderInterface();
+}
+
+function renderInterface() {
+  // clear previous layers
+  hideAll();
+
+  // display appropriate interface
+  if (thisState == "splash") {
+    vid.show();
+    nextbtn.html("start");
+    nextbtn.show();
+  } else if (thisState == "character") {
+    nextbtn.show();
+    nextbtn.html('next');
+    chartext.show();
+    charsel.show();
+
+  } else if (thisState == "preferences") {
+    nextbtn.show();
+    showPreferences();
+
+  } else if (thisState == "mictest") {    
+    nextbtn.show();
+    audiotext.show();
+    recbtn.show();
+    speechoutput.show();
+    speechoutput.html("");
+
+    audiotext.html(story["mictest"].text);
+    doMicTest();
+
+  } else if (thisState == "waiting") {
+    waittext.html(story["waiting"].text)
+    waittext.show();
+
+    // TODO fix this formatting code. really ugly.
+    timertext.show();
+    let waittime = 5000;
+    timeStartExp = millis() + waittime;
+    fakeWait();
+    // waitToStartScript();
+
+  } else if (thisState == "offboarding") {
+    offboardingtext.show();
+    setTimeout(renderInterface, 5000);
+
+  }else if (thisState == "radio") {  
+    showRadio();
+    radiotext.show();
+    let startRandomStation = sample([changeoma, changelax, changelnk, changemm]);
+    startRandomStation();
+
+  } else if (story[thisState].type == "audio") {    
+    chartext.html(charsel.value());
+    chartext.show()
+    charbiotext.html(backstories[charsel.value()]);
+    charbiotext.show();
+
+    if (story[thisState].next.length > 1) {
+      // showOptions();
+      // presentOptions();
+      bOptions = true;
+      audioFiles[thisState].onended(presentOptions);
+      
+      // time diff between now and time it should start
+      let timeelapsed = millis() - timeStoryClock;
+      let timediff = (story[thisState].timestart*1000) - timeelapsed;
+      if (timediff > 0) {
+        console.log("*** we are early, starting", thisState, "audio in", timediff/1000, "seconds");
+        setTimeout(audioFiles[thisState].play(), timediff);
+      } else {
+        console.log("*** starting", thisState, "audio", audioFiles);
+        if (audioCueTime > 0) {
+          audioFiles[thisState].currentTime = audioCueTime;
+          console.log("*** seeking to", audioCueTime, "==", audioFiles[thisState].currentTime);
+        }
+        setTimeout(audioFiles[thisState].play, 200);
+      }
+    } else {
+      // play and advance
+      audioFiles[thisState].play();
+      if (audioCueTime > 0) {
+        audioFiles[thisState].currentTime = audioCueTime;
+      }
+      audioFiles[thisState].onended(advanceInterface)
+    }
+    if (thisState == "onboarding") {
+      showMap();
+    } else {
+      hideMap();
+    }
+  } else if (story[thisState].type == "question") {
+    chartext.show()
+    chartext.html(charsel.value());
+    recbtn.show();
+    speechoutput.html("")
+    speechoutput.show();
+
+    // play and listen then advance
+    audioFiles[thisState].play();
+    audioFiles[thisState].onended(listenAndAdvance)
+  }
 }
 
 function presentOptions() {
@@ -176,97 +338,7 @@ function chooseOptionB() {
   setTimeout(renderInterface, 200);
 }
 
-function renderInterface() {
-  // clear previous layers
-  hideAll();
-
-  // display appropriate interface
-  if (thisState == "splash") {
-    vid.show();
-    nextbtn.html("start");
-    nextbtn.show();
-  } else if (thisState == "character") {
-    nextbtn.show();
-    nextbtn.html('next');
-    chartext.show();
-    charsel.show();
-
-  } else if (thisState == "preferences") {
-    nextbtn.show();
-    // advtext.show();
-    // advslider.show();
-    // soctext.show();
-    // socslider.show();
-    showPreferences();
-
-  } else if (thisState == "mictest") {    
-    nextbtn.show();
-    audiotext.show();
-    recbtn.show();
-    speechoutput.show();
-    speechoutput.html("");
-
-    audiotext.html(story["mictest"].text);
-    doMicTest();
-
-  } else if (thisState == "waiting") {
-    waittext.html(story["waiting"].text)
-    waittext.show();
-
-    // TODO fix this formatting code. really ugly.
-    timertext.show();
-    // timeStartExp = millis() + 5000;
-    timeStartExp = millis() + 30000;
-    fakeWait();
-
-    // waitToStartScript();
-
-  } else if (thisState == "offboarding") {
-    offboardingtext.show();
-    setTimeout(renderInterface, 5000);
-  }else if (thisState == "radio") {  
-    showRadio();
-    radiotext.show();
-    let startRandomStation = sample([changeoma, changelax, changelnk, changemm]);
-    startRandomStation();
-
-  } else if (story[thisState].type == "audio") {    
-    chartext.html(charsel.value());
-    chartext.show()
-    charbiotext.html(backstories[charsel.value()]);
-    charbiotext.show();
-
-    if (story[thisState].next.length > 1) {
-      // showOptions();
-      // presentOptions();
-      bOptions = true;
-      audioFiles[thisState].play();
-      audioFiles[thisState].onended(presentOptions);
-    } else {
-      // play and advance
-      audioFiles[thisState].play();
-      audioFiles[thisState].onended(advanceInterface)
-    }
-    if (thisState == "onboarding") {
-      showMap();
-    } else {
-      hideMap();
-    }
-  } else if (story[thisState].type == "question") {
-    chartext.show()
-    chartext.html(charsel.value());
-    recbtn.show();
-    speechoutput.html("")
-    speechoutput.show();
-
-    // play and listen then advance
-    audioFiles[thisState].play();
-    audioFiles[thisState].onended(listenAndAdvance)
-  }
-}
-
 function waitForNextLoc() {
-  
   let thislatlng = {};
   if (simulate == false && myposition != undefined) {
     thislatlng.lat = myposition.coords.latitude;
@@ -295,11 +367,12 @@ function listenAndAdvance() {
     console.log(`file has finished playing`);
 
     console.log("... now listening ...");
-    recbtn.style('background-color', 'red');
-    speechoutput.html("(speak now)");
-    speechoutput.style("color", "gray");
-    speechRec.addEventListener('end', () => stopListening());
-    speechRec.start(false, true);
+    doListen();
+    // recbtn.style('background-color', 'red');
+    // speechoutput.html("(speak now)");
+    // speechoutput.style("color", "gray");
+    // speechRec.addEventListener('end', () => stopListening());
+    // speechRec.start(false, true);
 }
 
 function sample(array) {
@@ -312,6 +385,10 @@ function fakeWait() {
     timertext.html(round(timeleft/1000));
     setTimeout(fakeWait, 1000)
   } else {
+    timeStoryClock = millis();
+    clockTimeStoryStarted = new Date();
+    storeItem("timestarted", clockTimeStoryStarted);
+    console.log(" -----> CLOCK TIME STORY STARTED", clockTimeStoryStarted);
     advanceInterface();
   }
 }

@@ -68,7 +68,7 @@
           "lat": 32.70444346073959,
           "lng": -117.16358440260593,
           "radius": 30,
-          "timestart": 0,
+          "starttime": 0,
           "duration": 644,
           "next": ["history1", "manure1"],
           "nexttext": ["Option A: History (White Flag)", "Option B: Manure (Purple Flag)"]
