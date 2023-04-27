@@ -295,7 +295,10 @@ function renderInterface() {
     charbiotext.show();
     
     // calc updated time
-    if(bFastForward) fastForwardStory(lastState, lastTimeStart);
+    if(bFastForward) { 
+      fastForwardStory(lastState, lastTimeStart);
+      bFastForward = false;
+    }
 
     if (story[thisState].next.length > 1) {
       // showOptions();

@@ -2,7 +2,7 @@ function createSplashScreen() {
   // vid.show();
   nextbtn = createButton("start");
   nextbtn.parent("nextbtn");
-  nextbtn.size(120, 40);
+  nextbtn.size(160, 40);
   // nextbtn.style("top", "400px");
   // nextbtn.style("top", "50vh");
   nextbtn.style("margin", "0 auto");
@@ -12,7 +12,7 @@ function createSplashScreen() {
 function createPauseScreen() {
   pausebutton = createButton("WAIT");
   pausebutton.parent("nextbtn");
-  pausebutton.size(120, 40);
+  pausebutton.size(160, 40);
   pausebutton.style("bottom", "300px");
   pausebutton.style("margin", "0 auto");
   // nextbtn.style("top", "400px");
