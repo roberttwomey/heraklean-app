@@ -40,7 +40,7 @@
         }, 
         "preferences": {
             "text": "Select your preferences:",
-            "next": ["mictest"],
+            "next": ["pause"],
             "keywords": [""]
         },
         "mictest": {
