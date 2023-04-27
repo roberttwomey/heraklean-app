@@ -167,10 +167,14 @@ function fastForwardStory(resumeState, storedTime) {
     audioCueTime = elapsedTimeSeconds - story[thisState].starttime;
     console.log("cueing audio at", thisState,"at", audioCueTime,"seconds in");
     let storedchar = getItem('myCharacter');
-    if (storedchar in characters) {
-      charsel.selected(storedchar);
+    console.log("stored character:", storedchar);
+    if (characters.includes(storedchar)) {
+      console.log("character in characters");
+      charsel.value(storedchar);
     } else {
-      charsel.selected(sample(characters));
+      console.log("character not in characters");
+      console.log(characters);
+      charsel.value(sample(characters));
     }
     chartext.html(charsel.value());
     charbiotext.html(backstories[charsel.value()]);
@@ -367,31 +371,6 @@ function chooseOptionB() {
   bOptions = false;
   setTimeout(renderInterface, 200);
 }
-
-// function waitForNextLoc() {
-//   let thislatlng = {};
-//   if (simulate == false && myposition != undefined) {
-//     thislatlng.lat = myposition.coords.latitude;
-//     thislatlng.lng = myposition.coords.longitude;
-//   } else {
-//     thislatlng.lat = simposition.lat;
-//     thislatlng.lng = simposition.lng;
-//   }
-
-//   let results = findClosestInList(thislatlng, story[thisState].next);
-//   closestlabel = results[0]
-//   // closestlabel = locations[closest].label;
-//   dist = results[1];
-//   if (closestlabel != undefined && dist < 5000000) {
-//     if (dist < story[closestlabel].radius) {
-//       thisState = closestlabel;
-//       console.log("--> moved to "+thisState);
-//       renderInterface();
-//     }
-
-//   }
-//   setTimeout(waitForNextLoc, 500);
-// }
 
 function listenAndAdvance() {
     console.log(`file has finished playing`);
