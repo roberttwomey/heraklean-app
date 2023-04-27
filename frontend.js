@@ -21,6 +21,17 @@ function createPauseScreen() {
   // pausebutton.style("margin", "0 auto");
   pausebutton.mousePressed(advanceInterface);
   pausebutton.hide();
+
+  pausetext = createP(story["pause"].text);
+  pausetext.parent("countdown");
+  pausetext.style("position", "relative");
+  pausetext.style("font-size", "32pt");
+  pausetext.style("color", "#8dcad7");
+  pausetext.style("top", "25vh");
+  pausetext.style("margin", "0 auto");
+  pausetext.style("line-height", "32pt");
+  pausetext.hide();
+
 }
 
 function createCharSelector() {
@@ -208,6 +219,7 @@ function hideAll() {
   offboardingtext.hide();
 
   pausebutton.hide();
+  pausetext.hide();
 }
 
 function createOptions() {

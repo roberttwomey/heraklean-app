@@ -54,6 +54,10 @@ let audioFiles = {};
 let optionA, optionB;
 let bOptions = false;
 
+// pause
+let pausebutton;
+let pausetext;
+
 // offboarding
 let offboardingtext;
 
@@ -272,6 +276,7 @@ function renderInterface() {
 
   } else if (thisState == "pause") {
     pausebutton.show();
+    pausetext.show();
   }
   else if (thisState == "offboarding") {
     offboardingtext.show();
