@@ -219,17 +219,38 @@ function advanceInterface() {
     // }
 
     if (story[thisState].next.length > 1) {
+      let nextState = sample(story[thisState].next);
+      thisState = nextState;
+      storeItem("state", thisState);
+      console.log("--> moved to ",thisState, "stored");
     } else {
       let nextState = story[thisState].next[0];
       thisState = nextState;
       storeItem("state", thisState);
-      console.log("--> moved to "+thisState, "stored");
+      console.log("--> moved to ", thisState, "stored");
     }
+
+
+    // REMOVED THIS LOGIC FOR FIRST DAY OF SHOW APRIL 27
+    // if (story[thisState].next.length > 1) {
+    // } else {
+    //   let nextState = story[thisState].next[0];
+    //   thisState = nextState;
+    //   storeItem("state", thisState);
+    //   console.log("--> moved to "+thisState, "stored");
+    // }
   } else {  
-    let nextState = story[thisState].next[0];
-    thisState = nextState;
-    storeItem("state", thisState);
-    console.log("--> moved to "+thisState);
+    if (story[thisState].next.length > 1) {
+      let nextState = sample(story[thisState].next);
+      thisState = nextState;
+      storeItem("state", thisState);
+      console.log("--> moved to ", thisState, "stored");
+    } else {
+      let nextState = story[thisState].next[0];
+      thisState = nextState;
+      storeItem("state", thisState);
+      console.log("--> moved to ",thisState);
+    }
   }
   renderInterface();
 }

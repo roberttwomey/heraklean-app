@@ -50,13 +50,27 @@
         },
         "pause": {
           "text": "Wait for your companions to join you",
-          "next": ["waiting"],
+          "next": ["path1", "path2"],
           "keywords": ["pause"]
         },
         "waiting": {
             "text": "Waiting for the experience to begin",
             "next": ["firstsection"],
             "keywords": ["done"]
+        },
+        "path1": {
+          "type": "audio",
+          "audio": "assets/Full_Agus_P1_mixdown.mp3",
+          "starttime": 0,
+          "duration": 1390,
+          "next": ["offboarding"]
+        },
+        "path2": {
+          "type": "audio",
+          "audio": "assets/Full_Agus_P2_mixdown.mp3",
+          "starttime": 0,
+          "duration": 1390,
+          "next": ["offboarding"]
         },
         "finish": {
             "text": "Now we are done.",
