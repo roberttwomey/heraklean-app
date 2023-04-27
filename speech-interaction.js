@@ -7,27 +7,27 @@
 // interaction stuff
 let bNewStep = false;
 
-// "Continuous recognition" (as opposed to one time only)
+// "Continuous speechRec" (as opposed to one time only)
 let continuous = false;
 let interimResults = true;
+let bRecognizing = false;
 
 // DOM sections for speech
 let lastHtml = "";
 let count = 0;
 
-// recognition
-// let speechRec = new p5.SpeechRec("en-US", gotSpeech);
-var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+// speechRec
+// let speechRec = new p5.speechRec("en-US", gotSpeech);
+var speechRecognition = speechRecognition || webkitSpeechRecognition;
 var SpeechGrammarList = SpeechGrammarList || window.webkitSpeechGrammarList;
-var SpeechRecognitionEvent =
-  SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+var speechRecognitionEvent =
+  speechRecognitionEvent || webkitSpeechRecognitionEvent;
 
-var speechRec = new SpeechRecognition();
+var speechRec = new speechRecognition();
 speechRec.continuous = false;
 speechRec.lang = "en-US";
 speechRec.interimResults = true;
 speechRec.maxAlternatives = 1;
-// speechRec.onresult = gotSpeech();
 
 speechRec.onresult = (event) => {
   // DOM element to display results
@@ -35,9 +35,7 @@ speechRec.onresult = (event) => {
   let said = event.results[0][0].transcript;
   
   if (event.results[0].isFinal == true) {
-    // final result: add to html
-    // let newHtml = lastHtml + `<p> ${said} </p>`;
-    // let newHtml = lastHtml + "<p>" + said + "</p>";
+    // final result
     speechoutput.innerHTML = said;
     speechoutput.style.color = 'black';
     
@@ -45,19 +43,12 @@ speechRec.onresult = (event) => {
     bListening = false;
     recbtn.style('background-color', '#f0f0f0');  
     
-    // display what was said
+    // speak what was said
     // speechSynth.speak(said);
-
-    processSpeech(said);
+    setTimeout(processSpeech(said), 1000);
     
-    // advance and listen
-    // bNewStep = true;
-    // lastHtml = speechoutput.innerHTML;
   } else {
     // temp result: display in light gray
-    // let tempspeechoutput = lastHtml + "<p style='color: gray'>" + said + "</p>";
-    // speechoutput.html(tempspeechoutput);
-    // speechoutput.innerHTML = tempspeechoutput;
     speechoutput.innerHTML = said;
     speechoutput.style.color =  "gray";
   }
@@ -81,9 +72,9 @@ function processSpeech(said) {
     // COMMENT OUT, DON"T NEED 
     // loop over next possibilities for this storypoint
     for (idx in story[thisState].next) {
-      console.log("processSpeech(): "+idx);
+      console.log("processSpeech(): curr idx is "+idx);
       let nextidx = story[thisState].next[0];
-      console.log("processSpeech(): "+nextidx);
+      console.log("processSpeech(): next idx is "+nextidx);
       for (keyidx in story[nextidx].keywords) {
         // check all the keyphrases for this storypoint
         let phrase = story[nextidx].keywords[keyidx];
@@ -105,7 +96,8 @@ function processSpeech(said) {
   // sayAndListen(story[thisState].text);
   // sayAndListen(story[thisState].text);
   console.log("processSpeech(): finished listening... starting again")
-  doListen();
+  setTimeout(startListening, 100);
+  // startListening();
 }
 
 // NO LONGER NEEDED saturday april 22
@@ -117,13 +109,7 @@ function processSpeech(said) {
 
 function doMicTest() {
   console.log("doing mic test");
-  
-  // bNewStep = true;
-  
-  // thisState = "mictest"; // should already be set in sketch
-  
-  // sayAndListen(story[thisState].text);
-  doListen();
+  startListening();
 }
 
 function sayAndListen(thistext) {
@@ -134,7 +120,6 @@ function sayAndListen(thistext) {
     );
 
     console.log("... now listening ...");
-    // toggleRecButton();
 
     recbtn.style('background-color', 'red');
     speechoutput.html("(speak now)");
@@ -150,7 +135,7 @@ function sayAndListen(thistext) {
   speechSynth.speak(utterThis);
 }
 
-function doListen() {
+function startListening() {
   console.log("... now listening ...");
   // toggleRecButton();
 
@@ -180,9 +165,19 @@ function toggleListening() {
     speechSynth.cancel();
     stopListening();
   } else {
-    bListening = true;
-    recbtn.style('background-color', 'red');
-    speechoutput.show();
-    speechRec.start(false, true);
+    startListening();
   }
 }
+
+
+speechRec.onstart = function () {
+  bRecognizing = true;
+};
+
+speechRec.onend = function () {
+  bRecognizing = false;
+};
+
+speechRec.onerror = function (event) {
+  bRecognizing = false;
+};

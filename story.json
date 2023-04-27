@@ -43,8 +43,13 @@
         },
         "mictest": {
             "text": "Test your microphone.<br>Repeat the phrase:<br><br>'My voice is my password'<br>",
-            "next": ["waiting"],
+            "next": ["pause"],
             "keywords": ["mike", "check", "test"]
+        },
+        "pause": {
+          "text": "Press button when your teammates are ready",
+          "next": ["waiting"],
+          "keywords": ["pause"]  
         },
         "waiting": {
             "text": "Waiting for the experience to begin",
@@ -68,6 +73,8 @@
           "lat": 32.70444346073959,
           "lng": -117.16358440260593,
           "radius": 30,
+          "starttime": 0,
+          "duration": 644,
           "next": ["history1", "manure1"],
           "nexttext": ["Option A: History (White Flag)", "Option B: Manure (Purple Flag)"]
         },
@@ -77,6 +84,8 @@
             "lat": 32.70381386410789,
             "lng": -117.1627945560613,
             "radius": 30,
+            "starttime": 654,
+            "duration": 187,
             "sounds": ["brook.mp3"],
             "next": ["refrigeration", "manure2"],
             "nexttext": ["Option A: Stable Refrigeration (Black Flag)", "Option B: Manure (Purple Flag)"]
@@ -87,6 +96,8 @@
             "lat": 32.70364233121849, 
             "lng": -117.16295037940655,
             "radius": 30,
+            "starttime": 656, 
+            "duration": 185,
             "next": ["refrigeration", "history2"],
             "nexttext": ["Option A: Stable Refrigeration (Black Flag)", "Option B: History (White Flag)"]
           },
@@ -96,6 +107,8 @@
             "lat": 32.70364233121849, 
             "lng": -117.16295037940655,
             "radius": 30,
+            "starttime": 851,
+            "duration": 185,
             "next": ["pedicab", "tendthegrass"],
             "nexttext": ["Option A: Pedicab (look for it!)",  "Option B: Tend the Grass (Orange Flag)"]
           },
@@ -105,6 +118,8 @@
             "lat": 32.70381386410789,
             "lng": -117.1627945560613,
             "radius": 30,
+            "starttime": 849,
+            "duration": 187,
             "sounds": ["brook.mp3"],
             "next": ["pedicab", "tendthegrass"],
             "nexttext": ["Option A: Pedicab (look for it!)",  "Option B: Tend the Grass (Orange Flag)"]
@@ -115,6 +130,8 @@
             "lat": 32.703436405162336,
             "lng": -117.16306584225097,
             "radius": 30,
+            "starttime": 1046,
+            "duration": 190,
             "next": ["pedicab", "tendthegrass"],
             "nexttext": ["Option A: Pedicab (look for it!)",  "Option B: Tend the Grass (Orange Flag)"]
           },
@@ -124,6 +141,8 @@
             "lat": 32.703719, 
             "lng": -117.163135,
             "radius": 30,
+            "starttime": 1246,
+            "duration": 397,
             "next": ["offboarding"]
           },
           "tendthegrass_single": {
@@ -161,6 +180,8 @@
           "pedicab": {
             "type": "audio",
             "audio": "assets/8x.mp3",
+            "starttime": 1246,
+            "duration": 77,
             "next": ["endingtrunc"]
           },
           "endingtrunc": {
@@ -169,6 +190,8 @@
             "lat": 32.703719, 
             "lng": -117.163135,
             "radius": 30,
+            "starttime": 1323,
+            "duration": 317,
             "next": ["offboarding"]
           },
           "offboarding": {

@@ -9,6 +9,20 @@ function createSplashScreen() {
   nextbtn.mousePressed(advanceInterface);
 }
 
+function createPauseScreen() {
+  pausebutton = createButton("WAIT");
+  pausebutton.parent("nextbtn");
+  pausebutton.size(120, 40);
+  pausebutton.style("bottom", "300px");
+  pausebutton.style("margin", "0 auto");
+  // nextbtn.style("top", "400px");
+  // pausebutton.style("top", "50vh");
+  // pausebutton.style("left", "50vw");
+  // pausebutton.style("margin", "0 auto");
+  pausebutton.mousePressed(advanceInterface);
+  pausebutton.hide();
+}
+
 function createCharSelector() {
     // character text
   chartext = createP("select your character:");
@@ -137,7 +151,8 @@ function createWaiting() {
   timertext.parent("countdown");
   timertext.style("position", "relative");
   timertext.style("font-size", "128pt");
-  timertext.style("color", "#f0f0f0");
+  // timertext.style("color", "#f0f0f0");
+  timertext.style("color", "#bfe5e5");
   timertext.style("top", "45vh");
   timertext.style("margin", "0 auto");
   timertext.style("line-height", "128pt");
@@ -190,6 +205,8 @@ function hideAll() {
   optionB.hide();
 
   offboardingtext.hide();
+
+  pausebutton.hide();
 }
 
 function createOptions() {
