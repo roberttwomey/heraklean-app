@@ -62,6 +62,8 @@ html, body {
 button {
   position: relative;
   display: block;
+  border-radius: 20px;
+  border-style: solid;
 }
 
 img {
