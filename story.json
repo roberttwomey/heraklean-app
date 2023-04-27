@@ -29,7 +29,9 @@
         "splash": {
             "text": "",
             "next": ["character"],
-            "keywords": ["splash"]
+            "keywords": ["splash"],
+            "starttime": 0,
+            "duration": 0
         },
         "character": {
             "text": "Select your character:",
