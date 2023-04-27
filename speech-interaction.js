@@ -117,28 +117,28 @@ function doMicTest() {
   startListening();
 }
 
-function sayAndListen(thistext) {
-  const utterThis = new SpeechSynthesisUtterance(thistext);
-  utterThis.onend = (event) => {
-    console.log(
-      `Utterance has finished being spoken after ${event.elapsedTime} seconds.`
-    );
+// function sayAndListen(thistext) {
+//   const utterThis = new SpeechSynthesisUtterance(thistext);
+//   utterThis.onend = (event) => {
+//     console.log(
+//       `Utterance has finished being spoken after ${event.elapsedTime} seconds.`
+//     );
 
-    console.log("... now listening ...");
+//     console.log("... now listening ...");
 
-    recbtn.style('background-color', 'red');
-    speechoutput.html("(speak now)");
-    speechoutput.style("color", "gray");
+//     recbtn.style('background-color', 'red');
+//     speechoutput.html("(speak now)");
+//     speechoutput.style("color", "gray");
 
-    // speechRec.addEventListener('end', speechRec.start(false, true));
-    // speechRec.start(false, true);
-    // speechRec.addEventListener('end', () => speechRec.start(false, true)); 
-    // speechRec.addEventListener('end', () => stopListening()); 
-    speechRec.start(false, true);
-  };
+//     // speechRec.addEventListener('end', speechRec.start(false, true));
+//     // speechRec.start(false, true);
+//     // speechRec.addEventListener('end', () => speechRec.start(false, true)); 
+//     // speechRec.addEventListener('end', () => stopListening()); 
+//     speechRec.start(false, true);
+//   };
   
-  speechSynth.speak(utterThis);
-}
+//   speechSynth.speak(utterThis);
+// }
 
 function startListening() {
   console.log("... now listening ...");
@@ -173,7 +173,6 @@ function toggleListening() {
     startListening();
   }
 }
-
 
 speechRec.onstart = function () {
   bRecognizing = true;
