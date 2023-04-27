@@ -9,7 +9,7 @@ let nextbtn;
 // story state
 let thisState; // current position in story
 let timeDoneWaiting;
-let waittime = 5*1000;
+let waittime = 20000;
 let timeStoryClock;
 let clockTimeStoryStarted; // Date
 

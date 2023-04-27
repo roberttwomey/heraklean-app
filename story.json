@@ -49,9 +49,9 @@
             "keywords": ["mike", "check", "test"]
         },
         "pause": {
-          "text": "Click to advance when your companions are ready",
+          "text": "Wait for your companions to join you",
           "next": ["waiting"],
-          "keywords": ["pause"]  
+          "keywords": ["pause"]
         },
         "waiting": {
             "text": "Waiting for the experience to begin",
