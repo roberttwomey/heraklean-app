@@ -352,7 +352,7 @@ function presentOptions() {
     optionA.html(story[thisState].nexttext[0]);
     optionB.html(story[thisState].nexttext[1]);
     showOptions();
-   setTimeout(presentOptions, 2000);
+  //  setTimeout(presentOptions, 2000);
   } else {
     // optionA.hide();
     // optionB.hide();
