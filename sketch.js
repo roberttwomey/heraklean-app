@@ -13,6 +13,10 @@ let waittime = 5*1000;
 let timeStoryClock;
 let clockTimeStoryStarted; // Date
 
+let bFastForward = false;
+let lastState;
+let lastTimeStart;
+
 // composition
 let storyfile = "story.json";
 let jsoncontents;
@@ -108,22 +112,17 @@ function setup() {
 
   // check our stored data from last session
   // check last state position
-  let lastState = getItem("state");
+  lastState = getItem("state");
   console.log("stored state:", lastState);
   if (lastState in story) {
     if (story[lastState].type == "audio") {
       // // check previous starttime, are we resuming? and if so, at what point?
-      let tempTime = Date.parse(getItem("timestarted"));
-      if (!isNaN(tempTime)) {
-        console.log("stored timestarted:", tempTime);
-        clockTimeStoryStarted = tempTime;
-        let currtime = new Date();
-        storyTimeElapsed = currtime - tempTime;
-        console.log("on setup(): state="+lastState+", story time elapsed", storyTimeElapsed/1000.0);
-        fastForwardStory(lastState, storyTimeElapsed);
-
-        story["splash"].next = [thisState];
-        thisState = "splash";
+      lastTimeStart = Date.parse(getItem("timestarted"));
+      if (!isNaN(lastTimeStart)) {
+        fastForwardStory(lastState, lastTimeStart);
+        nextbtn.html("resume");
+        // story["splash"].next = [thisState];
+        // thisState = "splash";
       } else {
         
       }
@@ -135,8 +134,15 @@ function setup() {
   // renderInterface();
 }
 
-function fastForwardStory(resumeState, elapsedTime) {
+function fastForwardStory(resumeState, storedTime) {
   // if (story[lastState].tim
+
+  console.log("stored timestarted:", storedTime);
+  clockTimeStoryStarted = storedTime;
+  let currtime = new Date();
+  elapsedTime = currtime - storedTime;
+  console.log("on setup(): state=", resumeState,", story time elapsed", elapsedTime/1000.0);
+
   let elapsedTimeSeconds = elapsedTime / 1000.0;
   console.log("fastForward() from", resumeState, "with", elapsedTimeSeconds, "seconds elapsed");
   thisState = resumeState;
@@ -144,8 +150,9 @@ function fastForwardStory(resumeState, elapsedTime) {
   let done = false;
   while (!done) {
     let endofsegment = story[thisState].starttime + story[thisState].duration;
+    console.log("storytime at beg of",thisState, ":", story[thisState].starttime);
     console.log("storytime at end of",thisState, ":", endofsegment);
-    if (endofsegment < elapsedTimeSeconds) {
+    if (elapsedTimeSeconds > endofsegment) {
       thisState = story[thisState].next[0]; // change to geoloc, instead of choosing first option
     } else {
       done = true;
@@ -166,6 +173,7 @@ function fastForwardStory(resumeState, elapsedTime) {
     chartext.html(charsel.value());
     charbiotext.html(backstories[charsel.value()]);
   }
+  bFastForward = true;
 }
 
 function charSelectEvent() {
@@ -273,6 +281,9 @@ function renderInterface() {
     chartext.show()
     charbiotext.html(backstories[charsel.value()]);
     charbiotext.show();
+    
+    // calc updated time
+    if(bFastForward) fastForwardStory(lastState, lastTimeStart);
 
     if (story[thisState].next.length > 1) {
       // showOptions();
@@ -330,6 +341,9 @@ function presentOptions() {
     optionB.html(story[thisState].nexttext[1]);
     showOptions();
    setTimeout(presentOptions, 2000);
+  } else {
+    // optionA.hide();
+    // optionB.hide();
   }
 }
 
