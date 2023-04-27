@@ -5,7 +5,13 @@
 
 // advance through screens
 let nextbtn;
+
+// story state
 let thisState; // current position in story
+let timeDoneWaiting;
+let waittime = 5*1000;
+let timeStoryClock;
+let clockTimeStoryStarted; // Date
 
 // composition
 let storyfile = "story.json";
@@ -31,17 +37,12 @@ let bListening = false;
 
 // screen 4
 let waittext, timertext;
-let timeStartExp;
-let waittime = 5*1000;
-let timeStoryClock;
-let clockTimeStoryStarted; // Date
 
 let audioCueTime = 0;
 
 let bStartedStory = false;
 
 // soundfiles
-let currSound;
 let audioFiles = {};
 
 // options
@@ -57,21 +58,14 @@ function preload() {
   vid.show();
   vid.parent("wallpaper");
 
-  // read story file
-  jsoncontents = loadJSON(storyfile, parseShowData);
+  // read story file and parse data
+  jsoncontents = loadJSON(storyfile, parseStoryData);
 }
 
 function setup() {
   noCanvas();
 
-  // NOT USED
-  // table = new p5.Table();
-  // table.addColumn("time");
-  // table.addColumn("value");
-  // NOT USED
-
-  // create a unique-ish ID, from https://stackoverflow.com/a/53116778
-  
+  // create a unique-ish ID, from https://stackoverflow.com/a/53116778  
   let uid = getItem('uid');
   if (uid === null) {
     uid = Date.now().toString(36) + Math.floor(Math.pow(10, 12) + Math.random() * 9*Math.pow(10, 12)).toString(36);
@@ -112,26 +106,28 @@ function setup() {
   // options
   createOffboarding();
 
-  // check last time and get started
+  // check our stored data from last session
   // check last state position
   let lastState = getItem("state");
-  
-  // console.log("last state", lastState);
+  console.log("stored state:", lastState);
   if (lastState in story) {
-    // // check previous starttime, are we resuming? and if so, at what point?
-    // let tempTime = Date.parse(getItem("timestarted"));
-    // if (!isNaN(tempTime)) {
-    //   console.log("clockTimeStarted", tempTime);
-    //   clockTimeStoryStarted = tempTime;
-    //   let currtime = new Date();
-    //   storyTimeElapsed = currtime - tempTime;
-    //   console.log("on startup \'"+lastState+"\': story time elapsed", storyTimeElapsed/1000.0);
-    //   fastForwardStory(lastState, storyTimeElapsed);
+    if (story[lastState].type == "audio") {
+      // // check previous starttime, are we resuming? and if so, at what point?
+      let tempTime = Date.parse(getItem("timestarted"));
+      if (!isNaN(tempTime)) {
+        console.log("stored timestarted:", tempTime);
+        clockTimeStoryStarted = tempTime;
+        let currtime = new Date();
+        storyTimeElapsed = currtime - tempTime;
+        console.log("on setup(): state="+lastState+", story time elapsed", storyTimeElapsed/1000.0);
+        fastForwardStory(lastState, storyTimeElapsed);
 
-    //   story["splash"].next = [thisState];
-    //   thisState = "splash";
-    
-    // }
+        story["splash"].next = [thisState];
+        thisState = "splash";
+      } else {
+        
+      }
+    }
   } else {
     thisState = "splash";
   }
@@ -147,33 +143,42 @@ function fastForwardStory(resumeState, elapsedTime) {
 
   let done = false;
   while (!done) {
-    let storytime = story[thisState].starttime + story[thisState].duration;
-    console.log("storytime at end of",thisState, ":", storytime);
-    if (storytime < elapsedTimeSeconds) {
-      thisState = story[thisState].next[0]; // change to geoloc, instaed of choosing first option
+    let endofsegment = story[thisState].starttime + story[thisState].duration;
+    console.log("storytime at end of",thisState, ":", endofsegment);
+    if (endofsegment < elapsedTimeSeconds) {
+      thisState = story[thisState].next[0]; // change to geoloc, instead of choosing first option
     } else {
       done = true;
     }
   }
   if (thisState == "offboarding") {
     thisState = "splash";
+    console.log("Restarting at ",thisState);
   } else {
     audioCueTime = elapsedTimeSeconds - story[thisState].starttime;
-    console.log("stopping at", thisState,"at", audioCueTime,"seconds in");
+    console.log("cueing audio at", thisState,"at", audioCueTime,"seconds in");
+    let storedchar = getItem('myCharacter');
+    if (storedchar in characters) {
+      charsel.selected(storedchar);
+    } else {
+      charsel.selected(sample(characters));
+    }
+    chartext.html(charsel.value());
+    charbiotext.html(backstories[charsel.value()]);
   }
 }
 
 function charSelectEvent() {
   let myChar = charsel.value();
-  background(200);
+  // background(200);
   console.log('Your character is ' + myChar + '!');
   storeItem('myCharacter', myChar);
 }
 
 function advanceInterface() {
-  if (Object.keys(audioFiles).length <= 0) {
-    loadAudioFiles();
-  }
+  // if (Object.keys(audioFiles).length <= 0) {
+  //   loadAudioFiles();
+  // }
 
   // if we have not selected a character
   if (thisState == "character" && charsel.value() == "") {
@@ -206,7 +211,7 @@ function advanceInterface() {
     let nextState = story[thisState].next[0];
     thisState = nextState;
     storeItem("state", thisState);
-    console.log("--> moved to"+thisState);
+    console.log("--> moved to "+thisState);
   }
   renderInterface();
 }
@@ -246,10 +251,9 @@ function renderInterface() {
 
     // TODO fix this formatting code. really ugly.
     timertext.show();
-    let waittime = 5000;
-    timeStartExp = millis() + waittime;
-    fakeWait();
-    // waitToStartScript();
+    timeDoneWaiting = millis() + waittime;
+    waitForStart();
+    // waitToStartSchedule();
 
   } else if (thisState == "pause") {
     pausebutton.show();
@@ -282,16 +286,16 @@ function renderInterface() {
       if (timediff > 0) {
         console.log("*** we are early, starting", thisState, "audio in", timediff/1000, "seconds");
         setTimeout(audioFiles[thisState].play(), timediff);
-      } else {
-        if (audioCueTime > 0) {
-          audioFiles[thisState].currentTime = audioCueTime;
-          console.log("*** seeking to", audioCueTime, "==", audioFiles[thisState].currentTime);
-        }
+      } else if (audioCueTime > 0) {
+          audioFiles[thisState].time(audioCueTime);
+          console.log("*** seeking to", audioCueTime, "==", audioFiles[thisState].time());
+          audioFiles[thisState].play();
         // setTimeout(audioFiles[thisState].play, 200);
-        // audioFiles[thisState].play();
+        // audioFiles[thisState].play().time(audioCueTime);
+      } else {
+        console.log("*** starting", thisState, "audio");//, audioFiles);
+        audioFiles[thisState].play();
       }
-      console.log("*** starting", thisState, "audio");//, audioFiles);
-      audioFiles[thisState].play();
     } else {
       // play and advance
       audioFiles[thisState].play();
@@ -347,30 +351,30 @@ function chooseOptionB() {
   setTimeout(renderInterface, 200);
 }
 
-function waitForNextLoc() {
-  let thislatlng = {};
-  if (simulate == false && myposition != undefined) {
-    thislatlng.lat = myposition.coords.latitude;
-    thislatlng.lng = myposition.coords.longitude;
-  } else {
-    thislatlng.lat = simposition.lat;
-    thislatlng.lng = simposition.lng;
-  }
+// function waitForNextLoc() {
+//   let thislatlng = {};
+//   if (simulate == false && myposition != undefined) {
+//     thislatlng.lat = myposition.coords.latitude;
+//     thislatlng.lng = myposition.coords.longitude;
+//   } else {
+//     thislatlng.lat = simposition.lat;
+//     thislatlng.lng = simposition.lng;
+//   }
 
-  let results = findClosestInList(thislatlng, story[thisState].next);
-  closestlabel = results[0]
-  // closestlabel = locations[closest].label;
-  dist = results[1];
-  if (closestlabel != undefined && dist < 5000000) {
-    if (dist < story[closestlabel].radius) {
-      thisState = closestlabel;
-      console.log("--> moved to "+thisState);
-      renderInterface();
-    }
+//   let results = findClosestInList(thislatlng, story[thisState].next);
+//   closestlabel = results[0]
+//   // closestlabel = locations[closest].label;
+//   dist = results[1];
+//   if (closestlabel != undefined && dist < 5000000) {
+//     if (dist < story[closestlabel].radius) {
+//       thisState = closestlabel;
+//       console.log("--> moved to "+thisState);
+//       renderInterface();
+//     }
 
-  }
-  setTimeout(waitForNextLoc, 500);
-}
+//   }
+//   setTimeout(waitForNextLoc, 500);
+// }
 
 function listenAndAdvance() {
     console.log(`file has finished playing`);
@@ -388,11 +392,11 @@ function sample(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function fakeWait() {
-  let timeleft = timeStartExp-millis();
+function waitForStart() {
+  let timeleft = timeDoneWaiting-millis();
   if (timeleft > 0) {
     timertext.html(round(timeleft/1000));
-    setTimeout(fakeWait, 1000)
+    setTimeout(waitForStart, 1000)
   } else {
     timeStoryClock = millis();
     clockTimeStoryStarted = new Date();
@@ -402,7 +406,7 @@ function fakeWait() {
   }
 }
 
-function waitToStartScript() {
+function waitToStartSchedule() {
   let remaining = timeToStart();
   let hours = remaining[0];
   let mins = remaining[1];
@@ -413,13 +417,13 @@ function waitToStartScript() {
     mins = String(mins).padStart(2, '0');
     seconds = String(seconds).padStart(2, '0');
     timertext.html(hours+":"+mins+":"+seconds);
-    setTimeout(waitToStartScript, 500)
+    setTimeout(waitToStartSchedule, 500)
   } else {
     advanceInterface();
   }
 }
 
-function parseShowData() {
+function parseStoryData() {
   story = jsoncontents["story"];
   showtimes = jsoncontents["showtimes"];
   // console.log(story);
@@ -434,9 +438,13 @@ function parseShowData() {
   nextshowtime = arrToDate(showtimes[nextshow]);
   console.log("next show starts: "+nextshowtime.toLocaleString());
 
-  // load minimap
+  // load minimap GEOLOC stuff
   // parseLocations();
   parseStoryLocations();
+
+  if (Object.keys(audioFiles).length <= 0) {
+    loadAudioFiles();
+  }
 }
 
 function timeToStart() {
@@ -479,14 +487,14 @@ function arrToDate(tt) {
 }
 
 function loadAudioFiles() {
-  // load audio files
+  // audio nodes
   for(idx in story) {
-    // loop over next possibilities for this storypoint
+    // load audio files for this node
     let thisNode = story[idx];
     if ((thisNode.type == "audio") || (thisNode.type == "question")) {
       audioFiles[idx] = createAudio(thisNode.audio);
       console.log("loaded ", thisNode.audio, thisNode.audio.duration);
+      audioFiles[idx].stop();
     }
-    // audioFile = createAudio(story[thisState].audio);
   }
 }

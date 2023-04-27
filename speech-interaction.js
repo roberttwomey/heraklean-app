@@ -18,12 +18,13 @@ let count = 0;
 
 // speechRec
 // let speechRec = new p5.speechRec("en-US", gotSpeech);
-var speechRecognition = speechRecognition || webkitSpeechRecognition;
+var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var SpeechGrammarList = SpeechGrammarList || window.webkitSpeechGrammarList;
-var speechRecognitionEvent =
-  speechRecognitionEvent || webkitSpeechRecognitionEvent;
+var SpeechRecognitionEvent =
+  SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
 
-var speechRec = new speechRecognition();
+  
+var speechRec = new SpeechRecognition();
 speechRec.continuous = false;
 speechRec.lang = "en-US";
 speechRec.interimResults = true;

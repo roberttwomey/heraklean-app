@@ -15,7 +15,6 @@ let myposition;
 let lastgeoloc = 0;
 // let locinterval = 500; // 0.5 sec;
 let locinterval = 5000;
-let bGeolocStarted = false;
 
 let simposition; // simulated position when clicking
 
@@ -73,7 +72,7 @@ function setupMap() {
 
   // DOM element to display locations list
   // locDiv = select("#locations");
-  if(bGeolocStarted) getLocation();
+  getLocation();
 
   inputDiv= select("#simulate");
   simulateCheck = createCheckbox('simulate', false);
@@ -82,7 +81,7 @@ function setupMap() {
 
   textSize(18);
   
-  if(bGeolocStarted) updatePosition();
+  updatePosition();
 
   hideMap();
 }
@@ -154,24 +153,15 @@ function draw() {
          thispxloc.x + 5, 
          thispxloc.y + 5);
   }
-  if (bGeolocStarted) {
-    if (millis() - lastgeoloc > locinterval) {
-      getLocation();
-      lastgeoloc = millis();
-    }
+  if (millis() - lastgeoloc > locinterval) {
+    getLocation();
+    lastgeoloc = millis();
   }
 }
 
 function toggleSimulate() {
   simulate = simulateCheck.checked();  
 }
-
-
-const geooptions = {
-  enableHighAccuracy: true,
-  timeout: locinterval,
-  maximumAge: 0
-};
 
 function getLocation() {
   if (navigator.geolocation) {
@@ -185,6 +175,12 @@ function getLocation() {
 
 // see high accuracy here: 
 // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
+
+const geooptions = {
+  enableHighAccuracy: true,
+  timeout: locinterval,
+  maximumAge: 0
+};
 
 function processGeoloc(position) {
   if (position != undefined) {
