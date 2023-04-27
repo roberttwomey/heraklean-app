@@ -43,8 +43,13 @@
         },
         "mictest": {
             "text": "Test your microphone.<br>Repeat the phrase:<br><br>'My voice is my password'<br>",
-            "next": ["waiting"],
+            "next": ["pause"],
             "keywords": ["mike", "check", "test"]
+        },
+        "pause": {
+          "text": "Press button when your teammates are ready",
+          "next": ["waiting"],
+          "keywords": ["pause"]  
         },
         "waiting": {
             "text": "Waiting for the experience to begin",

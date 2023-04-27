@@ -94,6 +94,9 @@ function setup() {
   // screen 3
   createMicCheck();
   
+  // screen 3.5
+  createPauseScreen();
+
   // screen 4
   createWaiting();
 
@@ -112,22 +115,23 @@ function setup() {
   // check last time and get started
   // check last state position
   let lastState = getItem("state");
+  
   // console.log("last state", lastState);
   if (lastState in story) {
-    // check previous starttime, are we resuming? and if so, at what point?
-    let tempTime = Date.parse(getItem("timestarted"));
-    if (!isNaN(tempTime)) {
-      console.log("clockTimeStarted", tempTime);
-      clockTimeStoryStarted = tempTime;
-      let currtime = new Date();
-      storyTimeElapsed = currtime - tempTime;
-      console.log("on startup \'"+lastState+"\': story time elapsed", storyTimeElapsed/1000.0);
-      fastForwardStory(lastState, storyTimeElapsed);
+    // // check previous starttime, are we resuming? and if so, at what point?
+    // let tempTime = Date.parse(getItem("timestarted"));
+    // if (!isNaN(tempTime)) {
+    //   console.log("clockTimeStarted", tempTime);
+    //   clockTimeStoryStarted = tempTime;
+    //   let currtime = new Date();
+    //   storyTimeElapsed = currtime - tempTime;
+    //   console.log("on startup \'"+lastState+"\': story time elapsed", storyTimeElapsed/1000.0);
+    //   fastForwardStory(lastState, storyTimeElapsed);
 
-      story["splash"].next = [thisState];
-      thisState = "splash";
+    //   story["splash"].next = [thisState];
+    //   thisState = "splash";
     
-    }
+    // }
   } else {
     thisState = "splash";
   }
@@ -247,7 +251,10 @@ function renderInterface() {
     fakeWait();
     // waitToStartScript();
 
-  } else if (thisState == "offboarding") {
+  } else if (thisState == "pause") {
+    pausebutton.show();
+  }
+  else if (thisState == "offboarding") {
     offboardingtext.show();
     setTimeout(renderInterface, 5000);
 
@@ -276,19 +283,21 @@ function renderInterface() {
         console.log("*** we are early, starting", thisState, "audio in", timediff/1000, "seconds");
         setTimeout(audioFiles[thisState].play(), timediff);
       } else {
-        console.log("*** starting", thisState, "audio", audioFiles);
         if (audioCueTime > 0) {
           audioFiles[thisState].currentTime = audioCueTime;
           console.log("*** seeking to", audioCueTime, "==", audioFiles[thisState].currentTime);
         }
-        setTimeout(audioFiles[thisState].play, 200);
+        // setTimeout(audioFiles[thisState].play, 200);
+        // audioFiles[thisState].play();
       }
+      console.log("*** starting", thisState, "audio");//, audioFiles);
+      audioFiles[thisState].play();
     } else {
       // play and advance
       audioFiles[thisState].play();
-      if (audioCueTime > 0) {
-        audioFiles[thisState].currentTime = audioCueTime;
-      }
+      // if (audioCueTime > 0) {
+      //   audioFiles[thisState].currentTime = audioCueTime;
+      // }
       audioFiles[thisState].onended(advanceInterface)
     }
     if (thisState == "onboarding") {
