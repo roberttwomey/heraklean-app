@@ -38,14 +38,19 @@ speechRec.onresult = (event) => {
     // final result
     speechoutput.innerHTML = said;
     speechoutput.style.color = 'black';
-    
+    console.log("final result");
+
     // done listening
     bListening = false;
-    recbtn.style('background-color', '#f0f0f0');  
-    
+    recbtn.style('background-color', '#f0f0f0');
+    speechRec.stop();
+    bListening = false;  
+    // stopListening();
+
     // speak what was said
     // speechSynth.speak(said);
-    setTimeout(processSpeech(said), 1000);
+    // setTimeout(processSpeech(said), 3000);
+    processSpeech(said);
     
   } else {
     // temp result: display in light gray
@@ -58,14 +63,13 @@ speechRec.onresult = (event) => {
 const speechSynth = window.speechSynthesis;
 
 function processSpeech(said) {
-  stopListening();
-
+  // stopListening();
   // said contains the string that was heard
   console.log(thisState, said)
   if (story[thisState].type == "question") {
     console.log("to "+thisState+": "+said);
     stopListening();
-    setTimeout(advanceInterface, 5000);
+    advanceInterface();
     // advanceInterface();
     return;
   } else {
@@ -95,8 +99,9 @@ function processSpeech(said) {
   // sayAndListen("I heard " + said);
   // sayAndListen(story[thisState].text);
   // sayAndListen(story[thisState].text);
+  
   console.log("processSpeech(): finished listening... starting again")
-  setTimeout(startListening, 100);
+  setTimeout(startListening, 2000);
   // startListening();
 }
 
@@ -128,7 +133,7 @@ function sayAndListen(thistext) {
     // speechRec.addEventListener('end', speechRec.start(false, true));
     // speechRec.start(false, true);
     // speechRec.addEventListener('end', () => speechRec.start(false, true)); 
-    speechRec.addEventListener('end', () => stopListening()); 
+    // speechRec.addEventListener('end', () => stopListening()); 
     speechRec.start(false, true);
   };
   
@@ -148,7 +153,7 @@ function startListening() {
   // speechRec.addEventListener('end', speechRec.start(false, true));
   // speechRec.start(false, true);
   // speechRec.addEventListener('end', () => speechRec.start(false, true)); 
-  // speechRec.addEventListener('end', () => stopListening()); 
+  speechRec.addEventListener('end', () => stopListening()); 
   speechRec.start(false, true);
 }
 

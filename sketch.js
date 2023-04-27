@@ -246,7 +246,7 @@ function renderInterface() {
 
     // TODO fix this formatting code. really ugly.
     timertext.show();
-    let waittime = 5000;
+    let waittime = 30000;
     timeStartExp = millis() + waittime;
     fakeWait();
     // waitToStartScript();

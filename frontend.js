@@ -110,13 +110,14 @@ function createSliders() {
     let pref = prefs[i];
     prefText[pref] = createP(pref);
     prefText[pref].parent("contents");
-    prefText[pref].style("top", "100px");
+    prefText[pref].style("top", "90px");
+    prefText[pref].style("line-height", "16pt");
     prefText[pref].hide();
 
     // slider element
     prefSliders[pref] = createSlider(-5, 5, 0);
     prefSliders[pref].parent("contents");
-    prefSliders[pref].style("top", "120px");
+    prefSliders[pref].style("top", "110px");
     prefSliders[pref].input(() => updateSlider(pref));
     prefSliders[pref].hide();
 
