@@ -13,7 +13,7 @@ let waittime = 20000;
 let timeStoryClock;
 let clockTimeStoryStarted; // Date
 
-let bFastForward = false;
+let bContinueSession = false;
 let lastState;
 let lastTimeStart;
 
@@ -125,6 +125,7 @@ function setup() {
       lastTimeStart = Date.parse(getItem("timestarted"));
       if (!isNaN(lastTimeStart)) {
         fastForwardStory(lastState, lastTimeStart);
+        bStarted=true;
         nextbtn.html("resume");
         bResuming = true;
         // story["splash"].next = [thisState];
@@ -183,7 +184,7 @@ function fastForwardStory(resumeState, storedTime) {
     chartext.html(charsel.value());
     charbiotext.html(backstories[charsel.value()]);
   }
-  bFastForward = true;
+  bContinueSession = true;
 }
 
 function charSelectEvent() {
@@ -197,6 +198,12 @@ function advanceInterface() {
   // if (Object.keys(audioFiles).length <= 0) {
   //   loadAudioFiles();
   // }
+  if (!bContinueSession) {
+    timeStoryClock = millis();
+    clockTimeStoryStarted = new Date();
+    storeItem("timestarted", clockTimeStoryStarted);
+    console.log(" -----> CLOCK TIME STORY STARTED", clockTimeStoryStarted);
+  }
 
   // if we have not selected a character
   if (thisState == "character" && charsel.value() == "") {
@@ -316,9 +323,9 @@ function renderInterface() {
     charbiotext.show();
     
     // calc updated time
-    if(bFastForward) { 
+    if(bContinueSession) { 
       fastForwardStory(lastState, lastTimeStart);
-      bFastForward = false;
+      bContinueSession = false;
     }
 
     if (story[thisState].next.length > 1) {

@@ -37,7 +37,7 @@
             "text": "Select your character:",
             "next": ["preferences"],
             "keywords": [""]
-        }, 
+        },
         "preferences": {
             "text": "Select your preferences:",
             "next": ["pause"],
@@ -50,7 +50,7 @@
         },
         "pause": {
           "text": "Wait for your companions to join you",
-          "next": ["path1", "path2"],
+          "next": ["path1", "path2", "path3", "path4"],
           "keywords": ["pause"]
         },
         "waiting": {
@@ -68,6 +68,20 @@
         "path2": {
           "type": "audio",
           "audio": "assets/Full_Agus_P2_mixdown.mp3",
+          "starttime": 0,
+          "duration": 1390,
+          "next": ["offboarding"]
+        },
+        "path3": {
+          "type": "audio",
+          "audio": "assets/Full_Manure_P1_mixdown.mp3",
+          "starttime": 0,
+          "duration": 1390,
+          "next": ["offboarding"]
+        },        
+        "path4": {
+          "type": "audio",
+          "audio": "assets/Full_Manure_P2_mixdown.mp3",
           "starttime": 0,
           "duration": 1390,
           "next": ["offboarding"]
