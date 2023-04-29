@@ -284,7 +284,6 @@ function renderInterface() {
     if (bResuming) nextbtn.html("resume");
     chartext.show();
     charsel.show();
-
   } else if (thisState == "preferences") {
     nextbtn.show();
     showPreferences();
