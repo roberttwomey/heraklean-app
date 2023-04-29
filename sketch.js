@@ -12,6 +12,7 @@ let timeDoneWaiting;
 let waittime = 20000;
 let timeStoryClock = 0;
 let clockTimeStoryStarted; // Date
+let resulttime;
 
 let bContinueSession = false;
 let lastState;
@@ -362,8 +363,12 @@ function renderInterface() {
       console.log("renderInterface(): playing file", audioFiles[thisState].elt.currentSrc );
       audioFiles[thisState].play();
       if (audioCueTime > 0) {
-        audioFiles[thisState].time(audioCueTime);
-        console.log("renderInterface(): seeking file", audioFiles[thisState].elt.currentSrc, "to", audioCueTime);
+        setTimeout(() => {
+          resulttime = audioFiles[thisState].time(audioCueTime);
+          console.log("renderInterface() seek: delayed for 2 seconds.");
+          console.log("renderInterface(): seeking file", audioFiles[thisState].elt.currentSrc, "to", audioCueTime, " ",audioFiles[thisState].elt.currentTime);
+        }, "2000");
+        // console.log("renderInterface(): seeking file", audioFiles[thisState].elt.currentSrc, "to", audioCueTime, " ",resulttime);
       }
       audioFiles[thisState].onended(advanceInterface)
     }
