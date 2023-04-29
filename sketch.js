@@ -173,7 +173,7 @@ function fastForwardStory(resumeState, storedTime) {
     console.log("fastForwarded() to end. Restarting at ", thisState);
   } else {
     audioCueTime = elapsedTimeSeconds - story[thisState].starttime;
-    console.log("cueing audio at", thisState,"at", audioCueTime,"seconds in");
+    console.log("calculating audio cue for", thisState,"file", story[thisState].audio, "at", audioCueTime,"seconds in");
     let storedchar = getItem('myCharacter');
     console.log("stored character:", storedchar);
     if (characters.includes(storedchar)) {
@@ -198,6 +198,7 @@ function charSelectEvent() {
 }
 
 function advanceInterface() {
+  console.log("advanceInterface()");
   // if (Object.keys(audioFiles).length <= 0) {
   //   loadAudioFiles();
   // }
@@ -220,7 +221,7 @@ function advanceInterface() {
 
   // location based advancement
   if (bContinueSession) {
-    console.log("going with " thisState);
+    console.log("going with", thisState);
   } else if (story[thisState].type == "audio" || story[thisState].type == "question") {
     // DISABLE LOCATION FOR WALKTHROUGH
     // waitForNextLoc();
@@ -270,7 +271,7 @@ function advanceInterface() {
 function renderInterface() {
   // clear previous layers
   hideAll();
-
+  console.log("renderInterface()");
   // display appropriate interface
   if (thisState == "splash") {
     vid.show();
@@ -342,6 +343,7 @@ function renderInterface() {
       // time diff between now and time it should start
       let timeelapsed = millis() - timeStoryClock;
       let timediff = (story[thisState].timestart*1000) - timeelapsed;
+      console.log("renderInterface():", timediff, timeStoryClock);
       if (timediff > 0) {
         console.log("*** we are early, starting", thisState, "audio in", timediff/1000, "seconds");
         setTimeout(audioFiles[thisState].play(), timediff);
@@ -357,17 +359,19 @@ function renderInterface() {
       }
     } else {
       // play and advance
+      console.log("renderInterface(): playing file", audioFiles[thisState].elt.currentSrc );
       audioFiles[thisState].play();
-      // if (audioCueTime > 0) {
-      //   audioFiles[thisState].currentTime = audioCueTime;
-      // }
+      if (audioCueTime > 0) {
+        audioFiles[thisState].time(audioCueTime);
+        console.log("renderInterface(): seeking file", audioFiles[thisState].elt.currentSrc, "to", audioCueTime);
+      }
       audioFiles[thisState].onended(advanceInterface)
     }
-    if (thisState == "onboarding") {
-      showMap();
-    } else {
-      hideMap();
-    }
+    // if (thisState == "onboarding") {
+    //   showMap();
+    // } else {
+    //   hideMap();
+    // }
   } else if (story[thisState].type == "question") {
     chartext.show()
     chartext.html(charsel.value());

@@ -33,10 +33,8 @@ function handleRequest(req, res) {
   // If blank let's ask for index.html
   if (pathname == '/') {
     pathname = '/index.html';
-  }
-
-  if (pathname == '/reset/') {
-    pathname = '/reset/index.html';
+  } else if (pathname == '/reset') {
+    pathname = '/reset.html';
   }
   
   // Ok what's our file extension
