@@ -10,7 +10,7 @@ let nextbtn;
 let thisState; // current position in story
 let timeDoneWaiting;
 let waittime = 20000;
-let timeStoryClock;
+let timeStoryClock = 0;
 let clockTimeStoryStarted; // Date
 
 let bContinueSession = false;
@@ -104,7 +104,7 @@ function setup() {
   createWaiting();
 
   // screen 5
-  setupRadio();
+  // setupRadio();
 
   // options
   createOptions();
@@ -116,6 +116,7 @@ function setup() {
   createOffboarding();
 
   // check our stored data from last session
+
   // check last state position
   lastState = getItem("state");
   console.log("stored state:", lastState);
@@ -125,7 +126,7 @@ function setup() {
       lastTimeStart = Date.parse(getItem("timestarted"));
       if (!isNaN(lastTimeStart)) {
         fastForwardStory(lastState, lastTimeStart);
-        bStarted=true;
+        bStarted = true;
         nextbtn.html("resume");
         bResuming = true;
         // story["splash"].next = [thisState];
@@ -137,6 +138,8 @@ function setup() {
   } else {
     thisState = "splash";
   }
+
+  // thisState = "splash";
   
   // renderInterface();
 }
@@ -167,14 +170,14 @@ function fastForwardStory(resumeState, storedTime) {
   }
   if (thisState == "offboarding") {
     thisState = "splash";
-    console.log("Restarting at ",thisState);
+    console.log("fastForwarded() to end. Restarting at ", thisState);
   } else {
     audioCueTime = elapsedTimeSeconds - story[thisState].starttime;
     console.log("cueing audio at", thisState,"at", audioCueTime,"seconds in");
     let storedchar = getItem('myCharacter');
     console.log("stored character:", storedchar);
     if (characters.includes(storedchar)) {
-      console.log("character in characters");
+      console.log("character is in characters");
       charsel.value(storedchar);
     } else {
       console.log("character not in characters");
@@ -198,7 +201,7 @@ function advanceInterface() {
   // if (Object.keys(audioFiles).length <= 0) {
   //   loadAudioFiles();
   // }
-  if (!bContinueSession) {
+  if (!bContinueSession && timeStoryClock == 0 && !bResuming) {
     timeStoryClock = millis();
     clockTimeStoryStarted = new Date();
     storeItem("timestarted", clockTimeStoryStarted);
@@ -216,7 +219,9 @@ function advanceInterface() {
   speechSynth.cancel();
 
   // location based advancement
-  if (story[thisState].type == "audio" || story[thisState].type == "question") {
+  if (bContinueSession) {
+    console.log("going with " thisState);
+  } else if (story[thisState].type == "audio" || story[thisState].type == "question") {
     // DISABLE LOCATION FOR WALKTHROUGH
     // waitForNextLoc();
 

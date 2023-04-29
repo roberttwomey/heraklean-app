@@ -34,6 +34,10 @@ function handleRequest(req, res) {
   if (pathname == '/') {
     pathname = '/index.html';
   }
+
+  if (pathname == '/reset/') {
+    pathname = '/reset/index.html';
+  }
   
   // Ok what's our file extension
   var ext = path.extname(pathname);
