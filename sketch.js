@@ -48,6 +48,9 @@ let audioCueTime = 0;
 let bStartedStory = false;
 let bResuming = false;
 
+// reset button
+let resetbtn;
+
 // soundfiles
 let audioFiles = {};
 
@@ -129,6 +132,10 @@ function setup() {
         fastForwardStory(lastState, lastTimeStart);
         bStarted = true;
         nextbtn.html("resume");
+        nextbtn.style("left", "20px");
+        nextbtn.style("bottom", "0px");
+        nextbtn.style("position", "absolute");
+        resetbtn.show();
         bResuming = true;
         // story["splash"].next = [thisState];
         // thisState = "splash";
@@ -143,6 +150,18 @@ function setup() {
   // thisState = "splash";
   
   // renderInterface();
+}
+
+function resetStorage() {
+  clearStorage();
+  console.log("resetStorage(): cleared resume data from storage...");
+  resetbtn.hide();
+  resetNextStyle();
+
+  thisState = "splash";
+  bResuming = false;
+  bContinueSession = false;
+  renderInterface();
 }
 
 function fastForwardStory(resumeState, storedTime) {
@@ -204,10 +223,11 @@ function advanceInterface() {
   //   loadAudioFiles();
   // }
   if (!bContinueSession && timeStoryClock == 0 && !bResuming) {
-    timeStoryClock = millis();
-    clockTimeStoryStarted = new Date();
-    storeItem("timestarted", clockTimeStoryStarted);
-    console.log(" -----> CLOCK TIME STORY STARTED", clockTimeStoryStarted);
+    // timeStoryClock = millis();
+    // clockTimeStoryStarted = new Date();
+    // storeItem("timestarted", clockTimeStoryStarted);
+    // console.log(" -----> CLOCK TIME STORY STARTED", clockTimeStoryStarted);
+    startClockAndAdvance();
   }
 
   // if we have not selected a character
@@ -443,12 +463,16 @@ function waitForStart() {
     timertext.html(round(timeleft/1000));
     setTimeout(waitForStart, 1000)
   } else {
-    timeStoryClock = millis();
-    clockTimeStoryStarted = new Date();
-    storeItem("timestarted", clockTimeStoryStarted);
-    console.log(" -----> CLOCK TIME STORY STARTED", clockTimeStoryStarted);
-    advanceInterface();
+    startClockAndAdvance();
   }
+}
+
+function startClockAndAdvance() {
+  timeStoryClock = millis();
+  clockTimeStoryStarted = new Date();
+  storeItem("timestarted", clockTimeStoryStarted);
+  console.log(" -----> CLOCK TIME STORY STARTED", clockTimeStoryStarted);
+  advanceInterface();
 }
 
 function waitToStartSchedule() {

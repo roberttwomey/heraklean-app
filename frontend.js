@@ -7,10 +7,24 @@ function createSplashScreen() {
   // nextbtn.style("top", "50vh");
   nextbtn.style("margin", "0 auto");
   nextbtn.mousePressed(advanceInterface);
+
+  resetbtn = createButton("reset");
+  resetbtn.parent("nextbtn");
+  resetbtn.size(160, 40);
+  resetbtn.style("position", "absolute");
+  resetbtn.style("bottom", "0");
+  resetbtn.style("right", "20px");
+  resetbtn.mousePressed(resetStorage);
+  resetbtn.hide();
 }
 
+function resetNextStyle() {
+  nextbtn.elt.style.removeProperty("position");
+  nextbtn.elt.style.removeProperty("left");
+  nextbtn.elt.style.removeProperty("bottom");
+}
 function createPauseScreen() {
-  pausebutton = createButton("WAIT");
+  pausebutton = createButton("GO");
   pausebutton.parent("nextbtn");
   pausebutton.size(160, 40);
   pausebutton.style("bottom", "300px");
@@ -19,7 +33,9 @@ function createPauseScreen() {
   // pausebutton.style("top", "50vh");
   // pausebutton.style("left", "50vw");
   // pausebutton.style("margin", "0 auto");
-  pausebutton.mousePressed(advanceInterface);
+  // pausebutton.mousePressed(advanceInterface);
+  pausebutton.mousePressed(startClockAndAdvance);
+
   pausebutton.hide();
 
   pausetext = createP(story["pause"].text);

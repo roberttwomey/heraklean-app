@@ -1,53 +1,240 @@
 {
-    "splash": {
-        "text": "",
-        "next": ["character"],
-        "keywords": ["splash"]
-    },
-    "character": {
-        "text": "Select your character:",
-        "next": ["preferences"],
-        "keywords": [""]
-    }, 
-    "preferences": {
-        "text": "Select your preferences:",
-        "next": ["mictest"],
-        "keywords": [""]
-    },
-    "mictest": {
-      "text": "Test your microphone.<br> Say done when complete.",
-      "next": ["waiting"],
-      "keywords": ["mike", "check", "test"]
-    },
-    "waiting": {
-      "text": "Waiting for the experience to begin",
-      "next": ["start"],
-      "keywords": ["done"]
-    },
-    
-    "start": {
-      "text": "This is the beginning of the story. Choose between options 2 or 3",
-      "next": ["2", "3"],
-      "keywords": ["start", "beginning"]
-    },
-    "2": {
-      "text": "Here we are at option 2",
-      "next": ["finish", "3"],
-      "keywords": ["two", "2"]
-    },
-    "3": {
-      "text": "Here we are at option 3",
-      "next": ["finish", "2"],
-      "keywords": ["three", "3"]
-    },
-    "finish": {
-      "text": "Now we are done.",
-      "next": ["splash"],
-      "keywords": ["finish", "end", "exit"]
-    }, 
-    "radio": {
-        "text": "HeraKlean Radio",
-        "next": [],
-        "keywords": ["radio"]
+    "showtimes": [ 
+      [2023, 3, 25, 18, 30],
+      [2023, 3, 26, 11, 30],
+      [2023, 3, 26, 12, 30],
+      [2023, 3, 26, 13, 30],
+      [2023, 3, 27, 16, 30],
+      [2023, 3, 27, 17, 30],
+      [2023, 3, 27, 18, 30],
+      [2023, 3, 28, 16, 30],
+      [2023, 3, 28, 17, 30],
+      [2023, 3, 28, 18, 30],
+      [2023, 3, 29, 11, 30],
+      [2023, 3, 29, 12, 30],
+      [2023, 3, 29, 13, 30],
+      [2023, 3, 29, 15, 30],
+      [2023, 3, 29, 16, 30],
+      [2023, 3, 29, 17, 30],
+      [2023, 3, 29, 18, 30],
+      [2023, 3, 30, 11, 30],
+      [2023, 3, 30, 12, 30],
+      [2023, 3, 30, 13, 30],
+      [2023, 3, 30, 15, 30],
+      [2023, 3, 30, 16, 30],
+      [2023, 3, 30, 17, 30],
+      [2023, 3, 30, 18, 30]
+    ],
+    "story": {
+        "splash": {
+            "text": "",
+            "next": ["character"],
+            "keywords": ["splash"],
+            "starttime": 0,
+            "duration": 0
+        },
+        "character": {
+            "text": "Select your character:",
+            "next": ["preferences"],
+            "keywords": [""]
+        },
+        "preferences": {
+            "text": "Select your preferences:",
+            "next": ["pause"],
+            "keywords": [""]
+        },
+        "mictest": {
+            "text": "Test your microphone.<br>Repeat the phrase:<br><br>'My voice is my password'<br>",
+            "next": ["pause"],
+            "keywords": ["mike", "check", "test"]
+        },
+        "pause": {
+          "text": "Wait for your companions to join you",
+          "next": ["path1", "path2", "path3", "path4"],
+          "keywords": ["pause"]
+        },
+        "waiting": {
+            "text": "Waiting for the experience to begin",
+            "next": ["firstsection"],
+            "keywords": ["done"]
+        },
+        "path1": {
+          "type": "audio",
+          "audio": "assets/Full_Agus_P1_mixdown.mp3",
+          "starttime": 0,
+          "duration": 1390,
+          "next": ["offboarding"]
+        },
+        "path2": {
+          "type": "audio",
+          "audio": "assets/Full_Agus_P2_mixdown.mp3",
+          "starttime": 0,
+          "duration": 1390,
+          "next": ["offboarding"]
+        },
+        "path3": {
+          "type": "audio",
+          "audio": "assets/Full_Manure_P1_mixdown.mp3",
+          "starttime": 0,
+          "duration": 1390,
+          "next": ["offboarding"]
+        },        
+        "path4": {
+          "type": "audio",
+          "audio": "assets/Full_Manure_P2_mixdown.mp3",
+          "starttime": 0,
+          "duration": 1390,
+          "next": ["offboarding"]
+        },
+        "finish": {
+            "text": "Now we are done.",
+            "next": ["splash"],
+            "keywords": ["finish", "end", "exit"]
+        }, 
+        "radio": {
+            "type": "text",
+            "text": "HeraKlean Radio",
+            "next": [],
+            "keywords": ["radio"]
+        },
+        "firstsection": {
+          "type": "audio",
+          "audio": "assets/First_section_mixdown.mp3",
+          "lat": 32.70444346073959,
+          "lng": -117.16358440260593,
+          "radius": 30,
+          "starttime": 0,
+          "duration": 644,
+          "next": ["history1", "manure1"],
+          "nexttext": ["Option A: History (White Flag)", "Option B: Manure (Purple Flag)"]
+        },
+          "history1": {
+            "type": "audio",
+            "audio": "assets/History-AGUS_mixdown.mp3",
+            "lat": 32.70381386410789,
+            "lng": -117.1627945560613,
+            "radius": 30,
+            "starttime": 654,
+            "duration": 187,
+            "sounds": ["brook.mp3"],
+            "next": ["refrigeration1", "manure2"],
+            "nexttext": ["Option A: Stable Refrigeration (Black Flag)", "Option B: Manure (Purple Flag)"]
+          },
+          "manure1": { 
+            "type": "audio",
+            "audio": "assets/Manure_mixdown.mp3",
+            "lat": 32.70364233121849, 
+            "lng": -117.16295037940655,
+            "radius": 30,
+            "starttime": 656, 
+            "duration": 185,
+            "next": ["refrigeration", "history2"],
+            "nexttext": ["Option A: Stable Refrigeration (Black Flag)", "Option B: History (White Flag)"]
+          },
+          "manure2": { 
+            "type": "audio",
+            "audio": "assets/Manure_mixdown.mp3",
+            "lat": 32.70364233121849, 
+            "lng": -117.16295037940655,
+            "radius": 30,
+            "starttime": 851,
+            "duration": 185,
+            "next": ["pedicab", "tendthegrass"],
+            "nexttext": ["Option A: Pedicab (look for it!)",  "Option B: Tend the Grass (Orange Flag)"]
+          },
+          "history2": {
+            "type": "audio",
+            "audio": "assets/History-AGUS_mixdown.mp3",
+            "lat": 32.70381386410789,
+            "lng": -117.1627945560613,
+            "radius": 30,
+            "starttime": 849,
+            "duration": 187,
+            "sounds": ["brook.mp3"],
+            "next": ["pedicab", "tendthegrass"],
+            "nexttext": ["Option A: Pedicab (look for it!)",  "Option B: Tend the Grass (Orange Flag)"]
+          },
+          "refrigeration": {             
+            "type": "audio",
+            "audio": "assets/StableRefrigeration_mixdown.mp3",
+            "lat": 32.703436405162336,
+            "lng": -117.16306584225097,
+            "radius": 30,
+            "starttime": 851,
+            "duration": 190,
+            "next": ["pedicab", "tendthegrass"],
+            "nexttext": ["Option A: Pedicab (look for it!)",  "Option B: Tend the Grass (Orange Flag)"]
+          },
+          "tendthegrass": {
+            "type": "audio",
+            "audio": "assets/RegularEndingScenes_mixdown.mp3", 
+            "lat": 32.703719, 
+            "lng": -117.163135,
+            "radius": 30,
+            "starttime": 1051,
+            "duration": 397,
+            "next": ["offboarding"]
+          },
+          "tendthegrass_single": {
+            "type": "audio",
+            "audio": "assets/8.mp3", 
+            "lat": 32.703719, 
+            "lng": -117.163135,
+            "radius": 30,
+            "next": ["stableself"]
+          },
+          "stableself": { 
+            "type": "audio",
+            "audio": "assets/9.mp3",
+            "lat": 32.703923,
+            "lng": -117.16313,
+            "radius": 30,
+            "next": ["finalresonate"]
+          },
+          "finalresonate": {
+            "type": "audio",
+            "audio": "assets/10.mp3", 
+            "lat": 32.703993,
+            "lng": -117.163292,
+            "radius": 30,
+            "next": ["stableswag"]
+          },
+          "stableswag": {
+            "type": "audio",
+            "audio": "assets/11.mp3", 
+            "lat": 32.704192,
+            "lng": -117.163595,
+            "radius": 30,
+            "next": ["radio", "offboarding"]
+          },
+          "pedicab": {
+            "type": "audio",
+            "audio": "assets/8x.mp3",
+            "starttime": 1046,
+            "duration": 77,
+            "next": ["endingtrunc"]
+          },
+          "pedicab2": {
+            "type": "audio",
+            "audio": "assets/8x.mp3",
+            "starttime": 1046,
+            "duration": 77,
+            "next": ["endingtrunc"]
+          },
+          "endingtrunc": {
+            "type": "audio",
+            "audio": "assets/endingscenes_truncated.mp3", 
+            "lat": 32.703719, 
+            "lng": -117.163135,
+            "radius": 30,
+            "starttime": 1133,
+            "duration": 317,
+            "next": ["offboarding"]
+          },
+          "offboarding": {
+            "text": "Thank you for your participation. Please proceed to offboarding for your Stable Swag, or stay to listen to the collective hopes for the future.",
+            "next": [""],
+            "keywords": [""]
+          }
     }
-  }
+}
