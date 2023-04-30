@@ -226,7 +226,7 @@ function advanceInterface() {
     // clockTimeStoryStarted = new Date();
     // storeItem("timestarted", clockTimeStoryStarted);
     // console.log(" -----> CLOCK TIME STORY STARTED", clockTimeStoryStarted);
-    startClockAndAdvance();
+    startClock();
   }
 
   // if we have not selected a character
@@ -300,7 +300,7 @@ function renderInterface() {
   } else if (thisState == "character") {
     nextbtn.show();
     nextbtn.html('next');
-    if (bResuming) nextbtn.html("resume");
+    // if (bResuming) nextbtn.html("resume");
     chartext.show();
     charsel.show();
   } else if (thisState == "preferences") {
@@ -466,11 +466,14 @@ function waitForStart() {
   }
 }
 
-function startClockAndAdvance() {
+function startClock() {
   timeStoryClock = millis();
   clockTimeStoryStarted = new Date();
   storeItem("timestarted", clockTimeStoryStarted);
   console.log(" -----> CLOCK TIME STORY STARTED", clockTimeStoryStarted);
+}
+function startClockAndAdvance() {
+  startClock();
   advanceInterface();
 }
 
