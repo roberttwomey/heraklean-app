@@ -236,6 +236,8 @@ function hideAll() {
 
   pausebutton.hide();
   pausetext.hide();
+
+  resetbtn.hide();
 }
 
 function createOptions() {

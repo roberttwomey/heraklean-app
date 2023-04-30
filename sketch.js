@@ -166,8 +166,7 @@ function resetStorage() {
 
 function fastForwardStory(resumeState, storedTime) {
   // if (story[lastState].tim
-
-  console.log("stored timestarted:", storedTime);
+  console.log("fastForwardStory(): stored timestarted", storedTime);
   clockTimeStoryStarted = storedTime;
   let currtime = new Date();
   elapsedTime = currtime - storedTime;
