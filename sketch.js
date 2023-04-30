@@ -161,7 +161,9 @@ function resetStorage() {
   thisState = "splash";
   bResuming = false;
   bContinueSession = false;
-  renderInterface();
+  
+  location.reload();
+  // renderInterface();
 }
 
 function fastForwardStory(resumeState, storedTime) {
@@ -226,6 +228,7 @@ function advanceInterface() {
     // clockTimeStoryStarted = new Date();
     // storeItem("timestarted", clockTimeStoryStarted);
     // console.log(" -----> CLOCK TIME STORY STARTED", clockTimeStoryStarted);
+    console.log("advanceInterface():", thisState, "not continuing, not resuming");
     startClock();
   }
 
